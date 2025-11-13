@@ -11,9 +11,9 @@ const HeaderLg = () => {
         <header className={`${theme === "dark" ? "dark" : "light"} bg-white-shade dark:bg-dark-bg w-full h-16 border-b border-black/10 dark:border-white-shade/15 hidden lg:flex items-center sticky top-0 left-0 z-50`}>
             <div className="container text-white-shade flex items-center justify-between">
                 <Logo 
-                    logoWidth={2.5} 
-                    logoHeight={2.5} 
-                    logoSize={1.5} 
+                    iconWidth={2.5} 
+                    iconHeight={2.5} 
+                    iconSize={1.5} 
                     logoTextSize={1.2}
                 />
 
