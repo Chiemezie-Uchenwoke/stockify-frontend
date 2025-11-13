@@ -1,8 +1,17 @@
+import { Routes, Route } from "react-router";
+import HomePage from "./pages/HomePage";
+import SignInPage from "./pages/SignInPage";
+import RegisterPage from "./pages/RegisterPage";
+import DashboardPage from "./pages/DashboardPage";
+import NotFoundPage from "./pages/NotFoundPage";
+
 function App() {
 
   return (
     <>
-      <h1 className="text-7xl text-blue-700 font-bold">Hello World!</h1>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+      </Routes>
     </>
   )
 }
