@@ -8,7 +8,7 @@ const HeaderLg = () => {
     const {theme} = useThemeStore();
 
     return (
-        <header className={`${theme === "dark" ? "dark" : "light"} bg-white-shade dark:bg-dark-bg w-full h-16 border-b border-black/10 dark:border-white-shade/15 flex items-center`}>
+        <header className={`${theme === "dark" ? "dark" : "light"} bg-white-shade dark:bg-dark-bg w-full h-16 border-b border-black/10 dark:border-white-shade/15 hidden lg:flex items-center sticky top-0 left-0 z-50`}>
             <div className="container text-white-shade flex items-center justify-between">
                 <Logo 
                     logoWidth={2.5} 
