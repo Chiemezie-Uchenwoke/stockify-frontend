@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import useThemeStore from "../../stores/ThemeStore";
-import { motion } from "motion/react"
+import { motion } from "motion/react" // eslint-disable-line no-unused-vars
 import heroImage from "../../assets/hero_1.jpg";
 
 const Hero = () => {
@@ -8,7 +8,7 @@ const Hero = () => {
 
     return (
         <section 
-            className={`${theme === "dark" ? "dark" : ""} w-full min-h-[calc(100vh-4.25rem)] 2xl:min-h-[calc(70vh-4.25rem)] flex justify-center items-center bg-pri-col/5 bg-top bg-cover bg-no-repeat relative before:absolute before:w-full before:h-full before:bg-dark-bg/82 dark:before:bg-dark-bg/85 `}
+            className={`${theme === "dark" ? "dark" : ""} w-full min-h-[calc(100vh-4.25rem)] 2xl:min-h-[calc(70vh-4.25rem)] flex justify-center items-center bg-pri-col/5 bg-top bg-cover bg-no-repeat relative before:absolute before:w-full before:h-full before:bg-dark-bg/82 dark:before:bg-dark-bg/83 `}
             style={{backgroundImage: `url(${heroImage})`}}
         >
             <div className="container h-full flex flex-col items-center justify-center gap-7 lg:gap-8 py-16 lg:py-18">                
@@ -16,7 +16,7 @@ const Hero = () => {
                     className="font-bold text-3xl md:text-4xl lg:text-6xl text-center w-full max-w-80 sm:max-w-100 md:max-w-120 lg:max-w-200 relative z-2 text-light-surface"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }} 
-                    transition={{ duration: 0.8, ease: "easeOut" }} 
+                    transition={{ delay: 0.2, duration: 0.8, ease: "easeOut" }} 
                     whileHover={{ scale: 1.05, y: -5 }}
                 >
                     Track. Analyze. Grow your business.
