@@ -11,7 +11,7 @@ const HeaderSm = () => {
     const {theme} = useThemeStore();
 
     return (
-        <header className={`${theme === "dark" ? "dark" : "light"} bg-light-surface dark:bg-dark-surface w-full h-17 border-b border-black/10 dark:border-white-shade/15 flex lg:hidden items-center sticky top-0 left-0 z-50 `}>
+        <header className={`${theme === "dark" ? "dark" : "light"} bg-light-surface dark:bg-dark-bg w-full h-17 border-b border-black/10 dark:border-white-shade/15 flex lg:hidden items-center sticky top-0 left-0 z-50 `}>
             <nav className="px-2 w-full h-full flex items-center justify-between relative">
                 <Logo 
                     iconWidth={2.45} 
