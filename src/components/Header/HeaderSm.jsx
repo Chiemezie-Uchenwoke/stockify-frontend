@@ -11,7 +11,7 @@ const HeaderSm = () => {
     const {theme} = useThemeStore();
 
     return (
-        <header className={`${theme === "dark" ? "dark" : "light"} bg-light-surface dark:bg-dark-bg w-full h-17 border-b border-black/10 dark:border-white-shade/15 flex lg:hidden items-center sticky top-0 left-0 z-50 `}>
+        <header className={`${theme === "dark" ? "dark" : "light"} bg-light-surface dark:bg-dark-surface w-full h-17 border-b border-black/10 dark:border-white-shade/15 flex lg:hidden items-center sticky top-0 left-0 z-50 `}>
             <nav className="px-2 w-full h-full flex items-center justify-between relative">
                 <Logo 
                     iconWidth={2.45} 
@@ -25,7 +25,7 @@ const HeaderSm = () => {
 
                     <div>
                         <button 
-                            className="border border-black/30 p-1 text-xl rounded"
+                            className="border border-black/30 dark:border-light-surface/40 p-1 text-2xl rounded"
                             onClick={() => setIsMobileDropdownVisible(prev => !prev)}
                         >
                             <IoMdMenu />
@@ -33,7 +33,7 @@ const HeaderSm = () => {
 
                         {
                             isMobileDropdownVisible &&
-                            <ul className="absolute top-full left-0 w-full max-w-60 bg-light-surface border-r border-t border-black/10 h-[calc(100vh-4.25rem)] flex flex-col justify-center items-center gap-8 shadow-lg z-40">
+                            <ul className="absolute top-full left-0 w-full max-w-60 bg-light-surface dark:bg-dark-surface border-r border-t border-black/10 dark:border-white-shade/5 h-[calc(100vh-4.25rem)] flex flex-col justify-center items-center gap-8 shadow-lg dark:shadow-xl z-40">
                                 {
                                     navLinks.map((linkItem) => {
                                         return (
