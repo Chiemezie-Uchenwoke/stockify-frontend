@@ -1,0 +1,45 @@
+import { Link } from "react-router";
+import useThemeStore from "../../stores/ThemeStore";
+import { motion } from "motion/react"
+
+const Hero = () => {
+    const {theme} = useThemeStore();
+
+    return (
+        <section className={`${theme === "dark" ? "dark" : ""} w-full min-h-[calc(100vh-4.25rem)] lg:min-h-[calc(55vh-4.25rem)] flex justify-center items-center bg-pri-col/5`}>
+            <div className="container h-full flex flex-col items-center justify-center gap-7 lg:gap-8 py-16 lg:py-18">                
+                <motion.h1 
+                    className="font-bold text-3xl md:text-4xl lg:text-5xl text-center w-full max-w-80 sm:max-w-100 md:max-w-120 lg:max-w-150 text-light-text-primary"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }} 
+                    transition={{ duration: 0.8, ease: "easeOut" }} 
+                    whileHover={{ scale: 1.05, y: -5 }}
+                >
+                    Track. Analyze. Grow your business.
+                </motion.h1>
+
+                <p className="text-center w-full max-w-120 sm:max-w-130 lg:max-w-150 lg:text-lg text-light-text-primary">
+                    Stockify helps importers and retailers manage inventory, expenses, and sales easily so you can streamline your operations and grow your business.
+                </p>
+
+                <div className="flex flex-col items-center gap-4 w-full pt-3 sm:flex-row sm:justify-center">
+                    <Link 
+                        to={"/login"}
+                        className="bg-light-surface hover:brightness-97 border border-black/15 duration-200 py-3 lg:py-4 px-12 rounded-2xl font-medium w-full text-center sm:w-fit"
+                    >
+                        Sign In
+                    </Link>
+
+                    <Link 
+                        to={"/register"}
+                        className="bg-pri-col hover:bg-pri-hover border border-black/10 duration-200 text-light-surface py-3 lg:py-4 px-12 rounded-2xl font-medium w-full text-center sm:w-fit"
+                    >
+                        Get Started
+                    </Link>
+                </div>
+            </div>
+        </section>
+    )
+}
+
+export default Hero;
