@@ -6,7 +6,7 @@ const featuresData = [
     {
         id: 1,
         title: "Batch Management",
-        description: "Organize products by import/retail batches with detailed tracking of costs and batch's date.",
+        description: "Organize products by import/retail batches with detailed tracking of costs and product quantities.",
         icon: FaWarehouse,
         keyFeature: ["Add import & retail batches", "View products in each batch"],
         bgColor: {darkTheme: "", lightTheme: ""},
