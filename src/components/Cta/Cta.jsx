@@ -3,15 +3,24 @@ import { HiOutlineBolt } from "react-icons/hi2";
 import { BsShield } from "react-icons/bs";
 import { PiGlobeLight } from "react-icons/pi";
 import useThemeStore from "../../stores/ThemeStore";
+import { easeInOut, motion } from "motion/react" // eslint-disable-line no-unused-vars
 
 const Cta = () => {
     const {theme} = useThemeStore();
 
     return (
-        <section className={`${theme === "dark" ? "dark" : ""} mt-16 bg-pri-col dark:bg-dark-surface py-16 flex flex-col items-center gap-5 px-2`}>
-            <h2 className="capitalize font-bold text-white-shade text-2xl text-center sm:text-3xl">
+        <section 
+            className={`${theme === "dark" ? "dark" : ""} mt-16 bg-pri-col dark:bg-dark-surface py-16 flex flex-col items-center gap-5 px-2`}
+        >
+            <motion.h2 
+                className="capitalize font-bold text-white-shade text-2xl text-center sm:text-3xl"
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.15 }}
+                transition={{ duration: 0.9, ease: "easeInOut" }}
+            >
                 Ready to transform your business?
-            </h2>
+            </motion.h2>
 
             <p className="text-center text-white-shade/80 w-full max-w-120 dark:text-white-shade/60">
                 Streamline your inventory management with Stockify. Built for importers and retailers who demand simplicity and reliability.

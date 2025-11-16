@@ -5,6 +5,7 @@ import Features from "../components/Features/Features";
 import Cta from "../components/Cta/Cta";
 
 const HomePage = () => {
+
     return (
         <>
             <HeaderLg />
