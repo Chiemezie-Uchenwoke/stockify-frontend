@@ -25,11 +25,11 @@ const FeaturesCard = ({title, description, icon: Icon, keyFeatures, bgColor, ico
 
             <ul className={`flex flex-col gap-2`}>
                 {
-                    keyFeatures.map((f, i) => {
+                    keyFeatures.map((f) => {
                         return (
                             <li 
-                                key={i} 
-                                className="flex items-center gap-2 text-light-text-primary/60 dark:text-light-surface/70"
+                                key={f} 
+                                className="flex items-center gap-2 text-light-text-primary/60 dark:text-light-surface/70 text-sm"
                             >
                                 <IoCheckmark className="text-green-600" /> {f}
                             </li>
