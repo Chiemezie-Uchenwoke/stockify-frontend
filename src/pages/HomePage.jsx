@@ -3,6 +3,7 @@ import HeaderSm from "../components/Header/HeaderSm";
 import Hero from "../components/Hero/Hero";
 import Features from "../components/Features/Features";
 import Cta from "../components/Cta/Cta";
+import Footer from "../components/Footer/Footer";
 
 const HomePage = () => {
 
@@ -13,6 +14,7 @@ const HomePage = () => {
             <Hero />
             <Features />
             <Cta />
+            <Footer />
         </>
     )
 };
