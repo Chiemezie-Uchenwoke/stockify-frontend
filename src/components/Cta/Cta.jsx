@@ -3,7 +3,7 @@ import { HiOutlineBolt } from "react-icons/hi2";
 import { BsShield } from "react-icons/bs";
 import { PiGlobeLight } from "react-icons/pi";
 import useThemeStore from "../../stores/ThemeStore";
-import { easeInOut, motion } from "motion/react" // eslint-disable-line no-unused-vars
+import { motion } from "motion/react" // eslint-disable-line no-unused-vars
 
 const Cta = () => {
     const {theme} = useThemeStore();
