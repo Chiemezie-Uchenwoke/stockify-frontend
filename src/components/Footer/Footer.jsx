@@ -1,7 +1,8 @@
 import { FaRegCopyright } from "react-icons/fa6";
 import useThemeStore from "../../stores/ThemeStore";
 import Logo from "../Logo/Logo";
-import { Link } from "react-router";
+import FooterLink from "./FooterLink";
+import footerLinkData from "../../data/footerLinkData";
 
 const Footer = () => {
     const {theme} = useThemeStore();
@@ -25,18 +26,16 @@ const Footer = () => {
 
                 <div className="flex flex-col gap-3">
                     <ul className="flex items-center gap-3 text-sm ">
-                        <li className="text-white-shade/60 hover:text-white-shade/80">
-                            <Link to="#">Privacy</Link>
-                        </li>
-                        <li className="text-white-shade/60 hover:text-white-shade/80">
-                            <Link to="#">Terms</Link>
-                        </li>
-                        <li className="text-white-shade/60 hover:text-white-shade/80">
-                            <Link to="#">Contact</Link>
-                        </li>
-                        <li className="text-white-shade/60 hover:text-white-shade/80">
-                            <Link to="#">Support</Link>
-                        </li>
+                        {
+                            footerLinkData.map((l) => {
+                                return (
+                                    <FooterLink 
+                                        key={l.id}
+                                        {...l}
+                                    />
+                                )
+                            })
+                        }
                     </ul>
 
                     <p className="flex items-center gap-2 text-sm text-white-shade/60">
