@@ -1,5 +1,4 @@
 import { FiPackage } from "react-icons/fi";
-import { memo } from 'react';
 
 const Logo = ({iconWidth, iconHeight, logoTextSize, iconSize}) => {
     return (
@@ -21,4 +20,4 @@ const Logo = ({iconWidth, iconHeight, logoTextSize, iconSize}) => {
     )
 }
 
-export default memo(Logo);
+export default Logo;
