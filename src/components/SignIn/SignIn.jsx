@@ -53,6 +53,7 @@ const SignIn = () => {
 
                                 <Link 
                                     className="forgot-password"
+                                    to={"/forgot-password"}
                                 >
                                     Forgot Password?
                                 </Link>
