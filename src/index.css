@@ -40,3 +40,15 @@ body{
 .dark body {
     @apply bg-dark-bg text-white-shade
 }
+
+.sign-in-form-label{
+    @apply text-sm font-medium
+}
+
+.sign-in-form-input{
+    @apply w-full h-10 rounded border border-black/20 outline-0 text-sm px-3 focus:outline-1 outline-pri-col dark:border-white-shade/15
+}
+
+.forgot-password{
+     @apply text-sm font-medium text-pri-col dark:text-dark-accent
+}
