@@ -76,7 +76,8 @@ const SignIn = () => {
                     </form>
 
                     <p className="text-sm">
-                        Don't have an account? <Link to={"/register"} className="text-pri-col font-medium dark:text-dark-accent">Sign Up</Link>
+                        <span className="dark:text-white-shade/80">Don't have an account? </span>
+                        <Link to={"/register"} className="text-pri-col font-medium dark:text-dark-accent">Sign Up</Link>
                     </p>
                     
                     <Link 
