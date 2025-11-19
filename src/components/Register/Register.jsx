@@ -1,6 +1,7 @@
 import Logo from "../Logo/Logo";
 import useThemeStore from "../../stores/ThemeStore";
 import { Link } from "react-router";
+import FormButton from "../FormButton/FormButton";
 
 const Register = () => {
     const {theme} = useThemeStore();
@@ -71,12 +72,9 @@ const Register = () => {
                         />
                     </div>
 
-                    <button 
-                        type="submit"
-                        className="bg-pri-col text-white-shade py-3 rounded-2xl font-medium active:translate-y-1 hover:bg-pri-hover duration-200 cursor-pointer"
-                    >
-                        Sign In
-                    </button>
+                    <FormButton>
+                        Register
+                    </FormButton>
                 </form>
 
                 <p className="text-sm">

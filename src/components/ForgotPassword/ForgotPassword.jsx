@@ -2,6 +2,7 @@ import Logo from "../Logo/Logo";
 import { Link } from "react-router";
 import useThemeStore from "../../stores/ThemeStore";
 import { FaArrowLeft } from "react-icons/fa";
+import FormButton from "../FormButton/FormButton";
 
 const ForgotPassword = () => {
     const {theme} = useThemeStore();
@@ -42,12 +43,9 @@ const ForgotPassword = () => {
                         />
                     </div>
 
-                    <button
-                        type="submit"
-                        className="bg-pri-col text-white-shade py-3 rounded-2xl font-medium active:translate-y-1 hover:bg-pri-hover duration-200 cursor-pointer"
-                    >
+                    <FormButton>
                         Reset Password
-                    </button>
+                    </FormButton>
                 </form>
 
                 <Link 
