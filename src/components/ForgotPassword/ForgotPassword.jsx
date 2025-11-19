@@ -3,6 +3,8 @@ import { Link } from "react-router";
 import useThemeStore from "../../stores/ThemeStore";
 import { FaArrowLeft } from "react-icons/fa";
 import FormButton from "../FormButton/FormButton";
+import AuthFormLabel from "../AuthFormLabel/AuthFormLabel";
+import AuthTextInput from "../AuthTextInput/AuthTextInput";
 
 const ForgotPassword = () => {
     const {theme} = useThemeStore();
@@ -29,17 +31,14 @@ const ForgotPassword = () => {
 
                 <form className="flex flex-col gap-4 self-start w-full">
                     <div className="flex flex-col gap-1">
-                        <label 
-                            htmlFor="email"
-                            className="text-sm font-medium"
-                        >
+                        <AuthFormLabel htmlFor={"email"}>
                             Email
-                        </label>
+                        </AuthFormLabel>
 
-                        <input 
+                        <AuthTextInput 
+                            id={"email"}
                             type="email" 
-                            placeholder="name@example.com" 
-                            className="w-full h-10 rounded border border-black/20 outline-0 text-sm px-3 focus:outline-1 outline-pri-col dark:border-white-shade/15"
+                            placeholder="name@example.com"
                         />
                     </div>
 

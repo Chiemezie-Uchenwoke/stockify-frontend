@@ -2,6 +2,8 @@ import Logo from "../Logo/Logo";
 import useThemeStore from "../../stores/ThemeStore";
 import { Link } from "react-router";
 import FormButton from "../FormButton/FormButton";
+import AuthFormLabel from "../AuthFormLabel/AuthFormLabel";
+import AuthTextInput from "../AuthTextInput/AuthTextInput";
 
 const Register = () => {
     const {theme} = useThemeStore();
@@ -28,47 +30,38 @@ const Register = () => {
 
                 <form className="flex flex-col gap-3 w-full">
                     <div className="flex flex-col gap-1">
-                        <label 
-                            htmlFor="fullname"
-                            className="sign-up-form-label"
-                        >
+                        <AuthFormLabel htmlFor={"fullname"}>
                             Fullname
-                        </label>
+                        </AuthFormLabel>
 
-                        <input 
+                        <AuthTextInput 
+                            id={"fullname"}
                             type="text" 
-                            placeholder="Ex: John Doe" 
-                            className="sign-up-form-input"
+                            placeholder="Ex: John Doe"
                         />
                     </div>
 
                     <div className="flex flex-col gap-1">
-                        <label 
-                            htmlFor="email"
-                            className="sign-up-form-label"
-                        >
+                        <AuthFormLabel htmlFor={"email"}>
                             Email
-                        </label>
+                        </AuthFormLabel>
 
-                        <input 
+                        <AuthTextInput 
+                            id={"email"}
                             type="email" 
-                            placeholder="name@example.com" 
-                            className="sign-up-form-input"
+                            placeholder="name@example.com"
                         />
                     </div>
 
                     <div className="flex flex-col gap-1">
-                        <label 
-                            htmlFor="password"
-                            className="sign-up-form-label"
-                        >
+                        <AuthFormLabel htmlFor={"password"}>
                             Password
-                        </label>
+                        </AuthFormLabel>
 
-                        <input 
+                        <AuthTextInput 
+                            id={"password"}
                             type="password" 
-                            placeholder="Enter your password" 
-                            className="sign-up-form-input"
+                            placeholder="Enter your password"
                         />
                     </div>
 

@@ -2,6 +2,8 @@ import Logo from "../Logo/Logo";
 import { Link } from "react-router";
 import useThemeStore from "../../stores/ThemeStore";
 import FormButton from "../FormButton/FormButton";
+import AuthFormLabel from "../AuthFormLabel/AuthFormLabel";
+import AuthTextInput from "../AuthTextInput/AuthTextInput";
 
 const SignIn = () => {
     const {theme} = useThemeStore();
@@ -29,28 +31,22 @@ const SignIn = () => {
 
                     <form  className="flex flex-col gap-3 w-full">
                         <div className="flex flex-col gap-1">
-                            <label 
-                                htmlFor="email"
-                                className="sign-in-form-label"
-                            >
+                            <AuthFormLabel htmlFor={"email"}>
                                 Email
-                            </label>
+                            </AuthFormLabel>
 
-                            <input 
-                                type="email" 
-                                placeholder="name@example.com" 
-                                className="sign-in-form-input"
+                            <AuthTextInput 
+                                type="email"
+                                id={"email"}
+                                placeholder={"name@example.com"}
                             />
                         </div>
 
                         <div className="flex flex-col gap-1">
                             <div className="flex justify-between">
-                                <label 
-                                    htmlFor="password"
-                                    className="sign-in-form-label"
-                                >
+                                <AuthFormLabel htmlFor={"password"}>
                                     Password
-                                </label>
+                                </AuthFormLabel>
 
                                 <Link 
                                     className="forgot-password"
@@ -60,10 +56,10 @@ const SignIn = () => {
                                 </Link>
                             </div>
 
-                            <input 
+                            <AuthTextInput 
+                                id={"password"}
                                 type="password" 
-                                placeholder="Enter your password" 
-                                className="sign-in-form-input"
+                                placeholder="Enter your password"
                             />
                         </div>
 
