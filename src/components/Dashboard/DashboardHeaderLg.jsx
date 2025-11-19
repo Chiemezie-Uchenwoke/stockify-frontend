@@ -6,7 +6,7 @@ const DashboardHeaderLg = () => {
     const {theme} = useThemeStore();
 
     return (
-        <header className={`${theme === "dark" ? "dark" : ""} w-full h-16 hidden md:flex items-center justify-between border-b border-black/15 dark:border-white-shade/10 px-4`}>
+        <header className={`${theme === "dark" ? "dark" : ""} w-full h-16 hidden md:flex items-center justify-between border-b border-black/15 dark:border-white-shade/10 px-4 bg-light-surface dark:bg-dark-bg sticky top-0 left-0 z-50`}>
             <Logo 
                 iconWidth={2} 
                 iconHeight={2} 
@@ -15,7 +15,7 @@ const DashboardHeaderLg = () => {
             />
 
             <div className="flex items-center gap-4">
-                <button className="border border-black/30 p-2 rounded cursor-pointer bg-light-surface hover:brightness-95 duration-200 dark:bg-transparent dark:border-white-shade/20">
+                <button className="border border-black/30 p-2 rounded cursor-pointer bg-light-surface hover:brightness-95 duration-200 dark:bg-transparent dark:border-white-shade/20 dark:text-white-shade/70">
                     <FaRegUser />
                 </button>
 
