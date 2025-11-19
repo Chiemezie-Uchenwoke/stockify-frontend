@@ -1,9 +1,12 @@
 import Logo from "../Logo/Logo";
 import { FaRegUser, FaPlus } from "react-icons/fa";
+import useThemeStore from "../../stores/ThemeStore";
 
 const DashboardHeaderLg = () => {
+    const {theme} = useThemeStore();
+
     return (
-        <header className="w-full h-16 hidden md:flex items-center justify-between border-b border-black/15 px-4 ">
+        <header className={`${theme === "dark" ? "dark" : ""} w-full h-16 hidden md:flex items-center justify-between border-b border-black/15 dark:border-white-shade/10 px-4`}>
             <Logo 
                 iconWidth={2} 
                 iconHeight={2} 
@@ -12,7 +15,7 @@ const DashboardHeaderLg = () => {
             />
 
             <div className="flex items-center gap-4">
-                <button className="border border-black/30 p-2 rounded cursor-pointer bg-light-surface hover:brightness-95 duration-200">
+                <button className="border border-black/30 p-2 rounded cursor-pointer bg-light-surface hover:brightness-95 duration-200 dark:bg-transparent dark:border-white-shade/20">
                     <FaRegUser />
                 </button>
 
