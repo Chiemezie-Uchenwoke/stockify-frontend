@@ -1,4 +1,4 @@
-# Stockify — Frontend
+# Stockify (Frontend)
 
 **Stockify** is an inventory & profit-tracking web app built for importers and retailers.  
 This repository contains the **frontend** of Stockify — a React + Tailwind UI.
