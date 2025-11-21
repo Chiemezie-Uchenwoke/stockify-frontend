@@ -1,7 +1,7 @@
 import { RiDashboardFill } from "react-icons/ri";
 import { BsStack } from "react-icons/bs";
 import { FaBox, FaMoneyBillWave, FaReceipt } from "react-icons/fa";
-import { FaChartBar } from "react-icons/fa6";
+import { FaChartBar, FaGear } from "react-icons/fa6";
 
 const sidebarViews = [
     {
@@ -39,6 +39,12 @@ const sidebarViews = [
         text: "Reports",
         icon: FaChartBar,
         view: "reports",
+    },
+    {
+        id: 7,
+        text: "Settings",
+        icon: FaGear,
+        view: "settings",
     },
 ];
 

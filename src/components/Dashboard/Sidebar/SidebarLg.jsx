@@ -3,16 +3,16 @@ import sidebarViews from "../../../data/sidebarViewsData";
 
 const SidebarLg = ({currentView, setView}) => {
     return (
-        <div className="hidden md:flex flex-col gap-1 py-5 px-4 w-full"
+        <div className="hidden md:flex flex-col gap-1 w-full h-[80%] overflow-y-auto"
         >
             {
-                sidebarViews.map((view) => {
+                sidebarViews.map((item) => {
                     return (
                         <SidebarButton 
-                            key={view.id}
-                            {...view}
+                            key={item.id}
+                            {...item}
                             setView={setView}
-                            isActive={view.view === currentView}
+                            isActive={item.view === currentView}
                         />
                     )
                 })
