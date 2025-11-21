@@ -3,6 +3,7 @@ import useThemeStore from "../../stores/ThemeStore";
 import SidebarLg from "./Sidebar/SidebarLg";
 import DashboardView from "./Views/DashboardView";
 import { FaArrowRightFromBracket } from "react-icons/fa6";
+import SidebarSm from "./Sidebar/SidebarSm";
 
 const DashboardContent = () => {
     const [view, setView] = useState("dashboard");
@@ -32,6 +33,11 @@ const DashboardContent = () => {
             <div className="w-full md:w-[calc(100%-18%)] lg:w-[calc(100%-20%)] ">
                 {view === "dashboard" && <DashboardView />}
             </div>
+
+            <SidebarSm 
+                currentView={view}
+                setView={setView}
+            />
         </div>
     )
 };
