@@ -29,6 +29,16 @@ const Register = () => {
         e.preventDefault();
         setLoading(true);
 
+        if (!formData.fullname || !formData.email || !formData.password) {
+            setAlert({
+                type: "error",
+                title: "Incomplete credentials",
+                message: "Missing required fields",
+            });
+            setLoading(false);
+            return;
+        }
+
         if (!validateEmail(formData.email)) {
             setAlert({
                 type: "error",

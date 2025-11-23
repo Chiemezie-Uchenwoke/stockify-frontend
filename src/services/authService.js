@@ -28,7 +28,7 @@ const signUp = async (formData) => {
     }
 }
 
-const siginIn = async (formData) => {
+const login = async (formData) => {
     try {
         const response = await fetch(`${apiBaseUrl}/api/auth/login`, {
             method: "POST",
@@ -55,4 +55,26 @@ const siginIn = async (formData) => {
     }
 }
 
-export {signUp, siginIn};
+const signOut = async () => {
+    try {
+        const response = await fetch(`${apiBaseUrl}/api/auth/logout`, {
+            method: "POST",
+            credentials: "include"
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            return {
+                success: false,
+                message: data.message || "Unable to logout",
+            }
+        }
+
+    } catch(err) {
+        console.error("Error logging out: ", err);
+        throw err;
+    }
+}
+
+export {signUp, login, signOut};

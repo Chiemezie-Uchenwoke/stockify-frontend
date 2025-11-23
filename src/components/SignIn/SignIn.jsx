@@ -4,9 +4,90 @@ import useThemeStore from "../../stores/ThemeStore";
 import FormButton from "../FormButton/FormButton";
 import AuthFormLabel from "../AuthFormLabel/AuthFormLabel";
 import AuthTextInput from "../AuthTextInput/AuthTextInput";
+import AlertMessage from "../AlertMessage/AlertMessage";
+import { login } from "../../services/authService";
+import { useState } from "react";
+import validateEmail from "../../utils/validateEmail";
+import { useNavigate } from "react-router";
 
 const SignIn = () => {
+    const navigate = useNavigate();
     const {theme} = useThemeStore();
+    const [formData, setFormData] = useState({
+        email: "",
+        password: "",
+    });
+    const [loading, setLoading] = useState(false);
+    const [alert, setAlert] = useState({
+        type: "",
+        title: "",
+        message: "",
+    });
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+
+        if (!formData.email || !formData.password) {
+            setAlert({
+                type: "error",
+                title: "Incomplete credentials",
+                message: "Missing required fields",
+            });
+            setLoading(false);
+            return;
+        }
+
+        if (!validateEmail(formData.email)){
+            setAlert({
+                type: "error",
+                title: "Invalid email",
+                message: "Check your email and try again.",
+            });
+            setLoading(false);
+            return;
+        }
+
+        try {
+            const data = await login(formData);
+
+            if (data.success) {
+                setLoading(false);
+
+                setFormData({
+                    email: "",
+                    message: "",
+                });
+
+                setAlert({
+                    type: "success",
+                    title: "Sign in successful.",
+                    message: data.message || "You logged in successfully",
+                });
+
+                setTimeout(() => navigate("/dashboard"), 3000);
+
+            } else {
+                setAlert({
+                    type: "error",
+                    title: "Sign in failed",
+                    message: data.message,
+                });
+
+                setLoading(false);
+            }
+
+        } catch(err) {
+            console.error("Error sigining in: ", err);
+            setAlert({
+                type: "error",
+                title: "Error",
+                message: "Something went wrong. Please try again."
+            });
+        } finally {
+            setLoading(false);
+        }
+    }
 
     return (
         <div className={`${theme === "dark" ? "dark" : ""} w-full h-screen flex justify-center items-center px-4`}>
@@ -29,7 +110,10 @@ const SignIn = () => {
                         </p>
                     </div>
 
-                    <form  className="flex flex-col gap-3 w-full">
+                    <form  
+                        className="flex flex-col gap-3 w-full"
+                        onSubmit={handleLogin}
+                    >
                         <div className="flex flex-col gap-1">
                             <AuthFormLabel htmlFor={"email"}>
                                 Email
@@ -39,6 +123,8 @@ const SignIn = () => {
                                 type="email"
                                 id={"email"}
                                 placeholder={"name@example.com"}
+                                value={formData.email}
+                                onChange={(e) => setFormData(prev => ({...prev, email: e.target.value}))}
                             />
                         </div>
 
@@ -60,10 +146,12 @@ const SignIn = () => {
                                 id={"password"}
                                 type="password" 
                                 placeholder="Enter your password"
+                                value={formData.password}
+                                onChange={(e) => setFormData(prev => ({...prev, password: e.target.value}))}
                             />
                         </div>
 
-                        <FormButton>
+                        <FormButton loading={loading}>
                             Sign In
                         </FormButton>
 
@@ -82,6 +170,13 @@ const SignIn = () => {
                     </Link>
                 </div>
             </div>
+
+            <AlertMessage 
+                type={alert.type}
+                title={alert.title}
+                message={alert.message}
+                onClose={() => setAlert({type: "", title: "", message: ""})}
+            />
         </div>
     );
 };
