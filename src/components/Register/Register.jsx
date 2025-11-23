@@ -4,9 +4,16 @@ import { Link } from "react-router";
 import FormButton from "../FormButton/FormButton";
 import AuthFormLabel from "../AuthFormLabel/AuthFormLabel";
 import AuthTextInput from "../AuthTextInput/AuthTextInput";
+import AlertMessage from "../AlertMessage/AlertMessage";
+import { useState } from "react";
 
 const Register = () => {
     const {theme} = useThemeStore();
+    const [alert, setAlert] = useState({
+        type: "success",
+        title: "Sign Up successful",
+        message: "Account created successfully"
+    });
 
     return (
         <div className={`${theme === "dark" ? "dark" : ""} w-full h-screen flex justify-center items-center px-4 overflow-y-auto`}>
@@ -75,6 +82,13 @@ const Register = () => {
                     <Link to={"/login"} className="text-pri-col font-medium dark:text-dark-accent">Login</Link>
                 </p>
             </div>
+
+            <AlertMessage 
+                title={alert.title} 
+                message={alert.message} 
+                type={alert.type} 
+                onClose={() => setAlert({type: "", message: "", title: ""})}
+            />
         </div>
     );
 };
