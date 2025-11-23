@@ -6,14 +6,79 @@ import AuthFormLabel from "../AuthFormLabel/AuthFormLabel";
 import AuthTextInput from "../AuthTextInput/AuthTextInput";
 import AlertMessage from "../AlertMessage/AlertMessage";
 import { useState } from "react";
+import { signUp } from "../../services/authService";
+import validateEmail from "../../utils/validateEmail";
+import { useNavigate } from "react-router";
 
 const Register = () => {
+    const navigate = useNavigate();
     const {theme} = useThemeStore();
     const [alert, setAlert] = useState({
-        type: "success",
-        title: "Sign Up successful",
-        message: "Account created successfully"
+        type: "",
+        title: "",
+        message: ""
     });
+    const [formData, setFormData] = useState({
+        fullname: "",
+        email: "",
+        password: "",
+    });
+    const [loading, setLoading] = useState(false);
+
+    const handleSignUp = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+
+        if (!validateEmail(formData.email)) {
+            setAlert({
+                type: "error",
+                title: "Invalid Email",
+                message: "Check your email and try again"
+            });
+            setLoading(false);
+            return;
+        }
+
+        try {
+            const data = await signUp(formData);
+
+            if (data.success) {
+                setLoading(false);
+                setFormData({
+                    fullname: "",
+                    email: "",
+                    password: "",
+                });
+
+                setAlert({
+                    type: "success",
+                    title: "Registration successful",
+                    message: `${data.message}` || "Account created successfully."
+                });
+
+                setTimeout(() => navigate("/login"), 3000);
+            } else {
+                setAlert({
+                    type: "error",
+                    title: "Registration failed",
+                    message: `${data.message}` || "Couldn't create account. Try again"
+                });
+                setLoading(false);
+            }
+            
+
+        } catch (err) {
+            console.error(err);
+            setAlert({
+                type: "error",
+                title: "Error",
+                message: "Something went wrong. Please try again."
+            });
+        } finally {
+            setLoading(false);
+        }
+
+    }
 
     return (
         <div className={`${theme === "dark" ? "dark" : ""} w-full h-screen flex justify-center items-center px-4 overflow-y-auto`}>
@@ -35,7 +100,10 @@ const Register = () => {
                     </p>
                 </div>
 
-                <form className="flex flex-col gap-3 w-full">
+                <form 
+                    className="flex flex-col gap-3 w-full"
+                    onSubmit={handleSignUp}
+                >
                     <div className="flex flex-col gap-1">
                         <AuthFormLabel htmlFor={"fullname"}>
                             Fullname
@@ -45,6 +113,8 @@ const Register = () => {
                             id={"fullname"}
                             type="text" 
                             placeholder="Ex: John Doe"
+                            value={formData.fullname}
+                            onChange={(e) => setFormData((prev) => ({...prev, fullname: e.target.value}))}
                         />
                     </div>
 
@@ -57,6 +127,8 @@ const Register = () => {
                             id={"email"}
                             type="email" 
                             placeholder="name@example.com"
+                            value={formData.email}
+                            onChange={(e) => setFormData(prev => ({...prev, email: e.target.value}))}
                         />
                     </div>
 
@@ -69,10 +141,12 @@ const Register = () => {
                             id={"password"}
                             type="password" 
                             placeholder="Enter your password"
+                            value={formData.password}
+                            onChange={(e) => setFormData(prev => ({...prev, password: e.target.value}))}
                         />
                     </div>
 
-                    <FormButton>
+                    <FormButton loading={loading}>
                         Register
                     </FormButton>
                 </form>
