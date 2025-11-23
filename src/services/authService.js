@@ -28,4 +28,31 @@ const signUp = async (formData) => {
     }
 }
 
-export {signUp};
+const siginIn = async (formData) => {
+    try {
+        const response = await fetch(`${apiBaseUrl}/api/auth/login`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            return {
+                success: false,
+                message: data.message || `Sign in failed: ${response.status}`,
+            }
+        }
+
+        return data;
+
+    } catch (err) {
+        console.error("Unable to sign in: ", err);
+        throw err;
+    }
+}
+
+export {signUp, siginIn};
