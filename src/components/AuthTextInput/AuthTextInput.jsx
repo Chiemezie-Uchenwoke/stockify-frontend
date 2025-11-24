@@ -1,4 +1,5 @@
-const AuthTextInput = ({id, type="text", placeholder, value, onChange}) => {
+const AuthTextInput = ({id, type="text", placeholder, value, onChange, onBlur}) => {
+
     return (
         <input 
             type={type} 
@@ -7,6 +8,7 @@ const AuthTextInput = ({id, type="text", placeholder, value, onChange}) => {
             id={id}
             value={value}
             onChange={onChange}
+            onBlur={onBlur}
         />
     )
 };

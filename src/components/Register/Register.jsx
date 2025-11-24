@@ -24,6 +24,7 @@ const Register = () => {
         password: "",
     });
     const [loading, setLoading] = useState(false);
+    const [isPasswordTouched, setIsPasswordTouched] = useState(false);
 
     const handleSignUp = async (e) => {
         e.preventDefault();
@@ -60,6 +61,8 @@ const Register = () => {
                     password: "",
                 });
 
+                setIsPasswordTouched(false);
+
                 setAlert({
                     type: "success",
                     title: "Registration successful",
@@ -88,6 +91,12 @@ const Register = () => {
             setLoading(false);
         }
 
+    }
+
+    const HandlePasswordError = () => {
+        return (
+            <p className="text-red-500 text-xs dark:text-red-400">Password should have at least 8 characters</p>
+        )
     }
 
     return (
@@ -153,7 +162,12 @@ const Register = () => {
                             placeholder="Enter your password"
                             value={formData.password}
                             onChange={(e) => setFormData(prev => ({...prev, password: e.target.value}))}
+                            onBlur={() => setIsPasswordTouched(true)}
                         />
+
+                        {
+                            isPasswordTouched && formData.password.length < 8 ? <HandlePasswordError /> : null
+                        }
                     </div>
 
                     <FormButton loading={loading}>

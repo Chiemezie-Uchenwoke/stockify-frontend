@@ -23,6 +23,7 @@ const SignIn = () => {
         title: "",
         message: "",
     });
+    const [isPasswordTouched, setIsPasswordTouched] = useState(false);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -56,8 +57,10 @@ const SignIn = () => {
 
                 setFormData({
                     email: "",
-                    message: "",
+                    password: "",
                 });
+
+                setIsPasswordTouched(false);
 
                 setAlert({
                     type: "success",
@@ -87,6 +90,12 @@ const SignIn = () => {
         } finally {
             setLoading(false);
         }
+    }
+
+    const HandlePasswordError = () => {
+        return (
+            <p className="text-red-500 text-xs dark:text-red-400">Password should have at least 8 characters</p>
+        )
     }
 
     return (
@@ -148,7 +157,12 @@ const SignIn = () => {
                                 placeholder="Enter your password"
                                 value={formData.password}
                                 onChange={(e) => setFormData(prev => ({...prev, password: e.target.value}))}
+                                onBlur={() => setIsPasswordTouched(true)}
                             />
+
+                            {
+                                ( isPasswordTouched && Number(formData.password.length) < 8 ) ? <HandlePasswordError /> : null
+                            }
                         </div>
 
                         <FormButton loading={loading}>
@@ -163,7 +177,7 @@ const SignIn = () => {
                     </p>
                     
                     <Link 
-                        className="underline text-sm font-medium dark:text-white-shade/60"
+                        className="underline text-sm font-medium dark:text-white-shade/60 w-fit"
                         to={"/"}
                     >
                         Return Home
