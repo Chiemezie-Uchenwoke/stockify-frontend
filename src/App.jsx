@@ -4,6 +4,7 @@ import SignInPage from "./pages/SignInPage";
 import RegisterPage from "./pages/RegisterPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import DashboardPage from "./pages/DashboardPage";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import NotFoundPage from "./pages/NotFoundPage";
 import useThemeStore from "./stores/ThemeStore";
 import { useEffect } from "react";
@@ -22,6 +23,8 @@ function App() {
     }
   }, [theme]);
 
+  // useEffect
+
   return (
     <>
       <Routes>
@@ -29,7 +32,10 @@ function App() {
         <Route path="/login" element={<SignInPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
+        
+        <Route element={<ProtectedRoute />}>
+          <Route path="/dashboard" element={<DashboardPage />} />
+        </Route>
       </Routes>
     </>
   )

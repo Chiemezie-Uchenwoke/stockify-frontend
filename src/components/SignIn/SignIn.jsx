@@ -9,10 +9,12 @@ import { login } from "../../services/authService";
 import { useState } from "react";
 import validateEmail from "../../utils/validateEmail";
 import { useNavigate } from "react-router";
+import useAuthStore from "../../stores/authStore";
 
 const SignIn = () => {
     const navigate = useNavigate();
     const {theme} = useThemeStore();
+    const {setUser, setIsAuthenticated, setIsLoading} = useAuthStore();
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -54,7 +56,9 @@ const SignIn = () => {
 
             if (data.success) {
                 setLoading(false);
-
+                setIsLoading(false);
+                setUser(data.user);
+                setIsAuthenticated(true);
                 setFormData({
                     email: "",
                     password: "",

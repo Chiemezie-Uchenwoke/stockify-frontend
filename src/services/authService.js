@@ -1,4 +1,4 @@
-
+import fetchWithAuth from "../utils/fetchWithAuth";
 const apiBaseUrl = import.meta.env.VITE_STOCKIFY_BACKEND_URL;
 
 const signUp = async (formData) => {
@@ -72,10 +72,53 @@ const signOut = async () => {
             }
         }
 
+        return data;
+
     } catch(err) {
         console.error("Error logging out: ", err);
         throw err;
     }
 }
 
-export {signUp, login, signOut};
+const refreshAuthToken = async () => {
+    try {
+        const response = await fetch (`${apiBaseUrl}/api/auth/refresh`, {
+            method: "GET",
+            credentials: "include",
+        });
+        const data = await response.json();
+        
+        if (!response.ok) {
+            return {
+                success: false,
+                message: data.message
+            }
+        }
+
+        return {
+            status: response.status,
+            ...data
+        }
+
+    } catch (err) {
+        console.error("Error refreshing auth token: ", err);
+        throw err;
+    }
+}
+
+const getAuthenticatedtUser = async () => {
+    try {
+            const response = await fetchWithAuth(`${apiBaseUrl}/api/auth/me`, {
+            method: "GET",
+        });
+
+        const data = response.json();
+
+        return data;
+    } catch(err){
+        console.error("Error fetching authenticated user: ", err);
+        throw err;
+    }
+}
+
+export {signUp, login, signOut, refreshAuthToken, getAuthenticatedtUser};
