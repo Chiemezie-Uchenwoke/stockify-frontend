@@ -2,9 +2,10 @@ import { useState } from "react";
 import useThemeStore from "../../stores/ThemeStore";
 import SidebarLg from "./Sidebar/SidebarLg";
 import DashboardView from "./Views/DashboardView";
-import { FaArrowRightFromBracket } from "react-icons/fa6";
+
 import SidebarSm from "./Sidebar/SidebarSm";
 import useAuthStore from "../../stores/authStore";
+import LogoutButton from "../LogoutButton/LogoutButton";
 
 const DashboardContent = () => {
     const [view, setView] = useState("dashboard");
@@ -20,18 +21,7 @@ const DashboardContent = () => {
                 />
 
                 <div className="w-full border-t border-black/20 dark:border-white-shade/10 py-2">
-                    <button 
-                        className="flex items-center gap-2 text-sm p-2.5 rounded-lg cursor-pointer duration-200 hover:bg-gray-200 dark:hover:bg-dark-surface/60 w-full dark:text-white-shade/60"
-                        onClick={logout}
-                    >
-                        <span className="text-xs">
-                            <FaArrowRightFromBracket />
-                        </span>
-
-                        <span className="">
-                            Logout
-                        </span>
-                    </button>
+                    <LogoutButton />
                 </div>
             </aside>
 
