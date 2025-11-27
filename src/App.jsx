@@ -8,9 +8,10 @@ import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import NotFoundPage from "./pages/NotFoundPage";
 import useThemeStore from "./stores/ThemeStore";
 import { useEffect } from "react";
+import useAuthStore from "./stores/authStore";
 
 function App() {
-
+  const {fetchCurrentUser} = useAuthStore();
   const {theme} = useThemeStore();
 
   useEffect(() => {
@@ -23,7 +24,12 @@ function App() {
     }
   }, [theme]);
 
-  // useEffect
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      await fetchCurrentUser();
+    }
+    getCurrentUser();
+  }, []);
 
   return (
     <>
