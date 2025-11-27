@@ -11,8 +11,8 @@ import { useEffect } from "react";
 import useAuthStore from "./stores/authStore";
 
 function App() {
-  const {fetchCurrentUser} = useAuthStore();
   const {theme} = useThemeStore();
+  const {fetchCurrentUser} = useAuthStore();
 
   useEffect(() => {
     const root = document.documentElement;
@@ -25,10 +25,7 @@ function App() {
   }, [theme]);
 
   useEffect(() => {
-    const getCurrentUser = async () => {
-      await fetchCurrentUser();
-    }
-    getCurrentUser();
+    fetchCurrentUser();
   }, []);
 
   return (

@@ -28,8 +28,8 @@ const useAuthStore = create((set) => ({
     try {
         const authenticatedUser = await getAuthenticatedtUser();
 
-        if (authenticatedUser) {
-          set({user: authenticatedUser, isAuthenticated: true});
+        if (authenticatedUser?.success) {
+          set({user: authenticatedUser.user, isAuthenticated: true});
         } else {
           set({user: null, isAuthenticated: false});
         }

@@ -9,7 +9,7 @@ import useAuthStore from "../../stores/authStore";
 const DashboardContent = () => {
     const [view, setView] = useState("dashboard");
     const {theme} = useThemeStore();
-    const {logout} = useAuthStore();
+    const {logout, user} = useAuthStore();
     
     return (
         <div className={`${theme === "dark" ? "dark" : ""} w-full h-[calc(100vh-4rem)] `}>
