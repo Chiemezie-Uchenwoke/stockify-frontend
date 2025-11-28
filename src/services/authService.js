@@ -121,4 +121,56 @@ const getAuthenticatedtUser = async () => {
     }
 }
 
-export {signUp, login, signOut, refreshAuthToken, getAuthenticatedtUser};
+const requestPasswordReset = async (formData) => {
+    try {
+        const response = await fetchWithAuth(`${apiBaseUrl}/api/auth/request-password-reset`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+        });
+        const data = await response.json();
+
+        if (!response.ok) {
+            return {
+                success: false,
+                message: data.message,
+            };
+        }
+
+        return data;
+
+    } catch (err) {
+        console.error("Error processing password reset: ", err);
+        throw err;
+    }
+}
+
+const resetPassword = async (formData) => {
+    try {
+        const response = await fetch(`${apiBaseUrl}/api/auth/reset-password`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            return {
+                success: false,
+                message: data.message,
+            };
+        };
+
+        return data;
+    } catch (err) {
+        console.error("Error resetting password: ", err);
+        throw err;
+    }
+}
+
+export {signUp, login, signOut, refreshAuthToken, getAuthenticatedtUser, requestPasswordReset, resetPassword};
