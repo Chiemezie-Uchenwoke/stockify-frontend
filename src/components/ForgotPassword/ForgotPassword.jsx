@@ -20,10 +20,7 @@ const ForgotPassword = () => {
         title: "",
         message: "",
     });
-    const [token, setToken] = useState({
-        isSent: false,
-        isValid: false,
-    });
+   
     const [formData, setFormData] = useState({
         email: "",
         token: "",
@@ -31,6 +28,7 @@ const ForgotPassword = () => {
     });
     const [isPasswordTouched, setIsPasswordTouched] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+    const [resetStep, setResetStep] = useState(1);
     const inputType = showPassword ? "text" : "password";
 
     const handleTogglePasswordVisibility = () => {
@@ -66,7 +64,8 @@ const ForgotPassword = () => {
                     title: "Request received",
                     message: data.message,
                 })
-                setToken({ isSent: true, isValid: false });
+            
+                setResetStep(2);
             }
 
         } catch(err){
@@ -74,7 +73,7 @@ const ForgotPassword = () => {
             setAlert({
                 type: "error",
                 title: "Error",
-                message: `Error processing request: ${err}`,
+                message: `Error processing request`,
             });
         }
     }
@@ -101,7 +100,7 @@ const ForgotPassword = () => {
                     message: data.message,
                 });
 
-                setToken({isSent: true, isValid: true});
+                setResetStep(3);
             }
 
         } catch (err) {
@@ -109,7 +108,7 @@ const ForgotPassword = () => {
             setAlert({
                 type: "error",
                 title: "Error",
-                message: `Error processing request: ${err}`,
+                message: `Error processing request`,
             });
         }
     }   
@@ -118,10 +117,15 @@ const ForgotPassword = () => {
         e.preventDefault();
 
         if (!formData.email || !formData.newPassword) {
+            const missingFields = [];
+
+            if (!formData.email) missingFields.push("Email");
+            if (!formData.newPassword) missingFields.push("Password");
+
             setAlert({
                 type: "error",
                 title: "Couldn't process request",
-                message: "Missing required fields",
+                message: `Missing required field(s): ${missingFields.join(", ")}`,
             });
             return;
         };
@@ -137,7 +141,6 @@ const ForgotPassword = () => {
                     message: data.message,
                 });
 
-                setToken({ isSent: false, isValid: false });
                 setIsPasswordTouched(false);
 
                 setFormData({
@@ -145,6 +148,8 @@ const ForgotPassword = () => {
                     token: "",
                     newPassword: "",
                 });
+
+                setResetStep(1);
 
                 setTimeout(() => navigate("/login"), 3000);
             }
@@ -154,14 +159,14 @@ const ForgotPassword = () => {
             setAlert({
                 type: "error",
                 title: "Error",
-                message: `Error processing request: ${err}`,
+                message: `Error processing request`,
             });
         }
     }
 
 
     return (
-        <div className={`${theme === "dark" ? "dark" : ""} w-full h-screen flex justify-center items-center py-8 px-4 overflow-y-auto`}>
+        <div className={`${theme === "dark" ? "dark" : ""} w-full h-screen flex justify-center items-center px-4`}>
             <div className="w-full max-w-100 border border-black/20 bg-light-surface rounded-2xl py-8 px-4 lg:px-6 flex flex-col gap-5 items-center dark:bg-dark-surface">
                 <Logo 
                     iconWidth={2} 
@@ -183,29 +188,28 @@ const ForgotPassword = () => {
                 <form 
                     className="flex flex-col gap-4 self-start w-full"
                     onSubmit={
-                        !token.isSent
-                            ? handleRequestPasswordReset
-                            : !token.isValid
-                            ? handleVerifyToken
-                            : handleResetPassword
+                            resetStep === 1 ? handleRequestPasswordReset : resetStep === 2 ? handleVerifyToken : handleResetPassword
                         }
                 >
-                    <div className="flex flex-col gap-1">
-                        <AuthFormLabel htmlFor={"email"}>
-                            Email
-                        </AuthFormLabel>
+                    {
+                        resetStep === 1 &&
+                        <div className="flex flex-col gap-1">
+                            <AuthFormLabel htmlFor={"email"}>
+                                Email
+                            </AuthFormLabel>
 
-                        <AuthTextInput 
-                            id={"email"}
-                            type="email" 
-                            placeholder="name@example.com"
-                            value={formData.email}
-                            onChange={(e) => setFormData(prev => ({...prev, email: e.target.value}))}
-                        />
-                    </div>
+                            <AuthTextInput 
+                                id={"email"}
+                                type="email" 
+                                placeholder="name@example.com"
+                                value={formData.email}
+                                onChange={(e) => setFormData(prev => ({...prev, email: e.target.value}))}
+                            />
+                        </div>
+                    }
 
                     {
-                        token.isSent && 
+                        (resetStep === 2) && 
                         <div className="flex flex-col gap-1">
                             <AuthFormLabel htmlFor={"token"}>
                                 Token
@@ -222,7 +226,7 @@ const ForgotPassword = () => {
                     }
 
                     {
-                        token.isValid &&
+                        (resetStep === 3) &&
                         <div className="flex flex-col gap-1">
                             <div className="flex justify-between">
                                 <AuthFormLabel htmlFor={"newPassword"}>
@@ -254,7 +258,7 @@ const ForgotPassword = () => {
                     }
 
                     <FormButton>
-                        {!token.isSent ? "Send Instructions" : !token.isValid ? "Verify Token" : "Reset Password"}
+                        {resetStep === 1 ? "Send Instructions" : resetStep === 2 ? "Verify Token" : "Reset Password"}
                     </FormButton>
                 </form>
 
