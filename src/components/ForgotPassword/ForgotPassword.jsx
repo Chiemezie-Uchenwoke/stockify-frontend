@@ -5,9 +5,11 @@ import { FaArrowLeft } from "react-icons/fa";
 import FormButton from "../FormButton/FormButton";
 import AuthFormLabel from "../AuthFormLabel/AuthFormLabel";
 import AuthTextInput from "../AuthTextInput/AuthTextInput";
+import { useState } from "react";
 
 const ForgotPassword = () => {
     const {theme} = useThemeStore();
+    const [isTokenSent, setIsTokenSent] = useState(false);
 
     return (
         <div className={`${theme === "dark" ? "dark" : ""} w-full h-screen flex justify-center items-center px-4`}>
