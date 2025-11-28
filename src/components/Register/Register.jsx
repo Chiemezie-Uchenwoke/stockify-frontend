@@ -9,6 +9,7 @@ import { useState } from "react";
 import { signUp } from "../../services/authService";
 import validateEmail from "../../utils/validateEmail";
 import { useNavigate } from "react-router";
+import HandlePasswordError from "../PasswordError/HandlePasswordError";
 
 const Register = () => {
     const navigate = useNavigate();
@@ -91,12 +92,6 @@ const Register = () => {
             setLoading(false);
         }
 
-    }
-
-    const HandlePasswordError = () => {
-        return (
-            <p className="text-red-500 text-xs dark:text-red-400">Password should have at least 8 characters</p>
-        )
     }
 
     return (
