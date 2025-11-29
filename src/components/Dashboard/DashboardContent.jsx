@@ -4,13 +4,13 @@ import SidebarLg from "./Sidebar/SidebarLg";
 import DashboardView from "./Views/DashboardView";
 
 import SidebarSm from "./Sidebar/SidebarSm";
-import useAuthStore from "../../stores/authStore";
+// import useAuthStore from "../../stores/authStore";
 import LogoutButton from "../LogoutButton/LogoutButton";
 
 const DashboardContent = () => {
     const [view, setView] = useState("dashboard");
     const {theme} = useThemeStore();
-    const {logout, user} = useAuthStore();
+    // const {logout, user} = useAuthStore();
     
     return (
         <div className={`${theme === "dark" ? "dark" : ""} w-full h-[calc(100vh-4rem)] `}>
