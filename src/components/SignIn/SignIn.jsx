@@ -90,7 +90,7 @@ const SignIn = () => {
             setAlert({
                 type: "error",
                 title: "Error",
-                message: "Something went wrong. Please try again."
+                message: "Internal server error. Please try again."
             });
         } finally {
             setLoading(false);
