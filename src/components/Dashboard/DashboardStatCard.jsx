@@ -10,7 +10,7 @@ const DashboardStatCard = ({statTitle, icon: Icon, value, iconBgColor, iconColor
     return (
         <div className={`${theme === "dark" ? "dark" : ""} border border-black/15 dark:border-white-shade/20 py-6 px-4 rounded-2xl bg-light-surface dark:bg-dark-surface hover:shadow-lg duration-200 flex flex-col gap-1`}>
             <div className="flex items-center justify-between">
-                <p className="text-sm text-light-text-primary/60 dark:text-white-shade/60">
+                <p className="text-xs md:text-sm text-light-text-primary/60 dark:text-white-shade/60">
                     {statTitle}
                 </p>
 

@@ -7,7 +7,7 @@ const UserMenu = () => {
     const {theme} = useThemeStore();
 
     return (
-        <div className={`${theme === "dark" ? "dark" : ""} hidden md:flex flex-col items-start gap-3 absolute top-16 right-4 bg-light-surface border border-black/20 dark:border-white-shade/20 py-6 px-3 rounded-2xl w-70 dark:bg-dark-surface shadow-lg`}>
+        <div className={`${theme === "dark" ? "dark" : ""} flex flex-col items-start gap-3 absolute top-16 right-4 bg-light-surface border border-black/20 dark:border-white-shade/20 py-6 px-3 rounded-2xl w-70 dark:bg-dark-surface shadow-lg`}>
             <h3 className="text-sm font-medium">
                 {user.fullname}
             </h3>
