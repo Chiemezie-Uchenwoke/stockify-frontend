@@ -4,7 +4,7 @@ const apiBaseUrl = import.meta.env.VITE_STOCKIFY_BACKEND_URL;
 
 const getAllBatches = async () => {
     try {
-        const response = fetchWithAuth(apiBaseUrl, {
+        const response = await fetchWithAuth(`${apiBaseUrl}/api/batch/`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

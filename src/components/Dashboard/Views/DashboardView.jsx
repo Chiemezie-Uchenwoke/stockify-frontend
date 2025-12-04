@@ -1,9 +1,10 @@
 import dashboardStat from "../../../data/dashboardStat";
 import DashboardStatCard from "../DashboardStatCard";
+import RecentBatches from "../recentBatches";
 
 const DashboardView = () => {
     return (
-        <div className="">
+        <div className="flex flex-col gap-8">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 {
                     dashboardStat.map((d) => {
@@ -16,6 +17,8 @@ const DashboardView = () => {
                     })
                 }
             </div>
+
+            <RecentBatches />
 
         </div>
     )
