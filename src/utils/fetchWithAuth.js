@@ -1,4 +1,5 @@
 import { refreshAuthToken } from "../services/authService";
+import useAuthStore from "../stores/authStore";
 
 const fetchWithAuth = async (url, options={}) => {
     try {
@@ -11,6 +12,9 @@ const fetchWithAuth = async (url, options={}) => {
             const refreshToken = await refreshAuthToken();
 
             if (refreshToken?.success) {
+                const { fetchCurrentUser } = useAuthStore.getState();
+                await fetchCurrentUser();
+
                 response = await fetch(url, {
                     ...options,
                     credentials: "include",

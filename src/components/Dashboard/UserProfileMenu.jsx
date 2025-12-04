@@ -9,7 +9,7 @@ const UserMenu = () => {
     return (
         <div className={`${theme === "dark" ? "dark" : ""} flex flex-col items-start gap-3 absolute top-16 right-4 bg-light-surface border border-black/20 dark:border-white-shade/20 py-6 px-3 rounded-2xl w-70 dark:bg-dark-surface shadow-lg`}>
             <h3 className="text-sm font-medium">
-                {user.fullname}
+                {user.fullname}  
             </h3>
 
             <p className="text-xs font-medium">
