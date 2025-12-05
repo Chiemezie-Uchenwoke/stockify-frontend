@@ -43,14 +43,19 @@ body{
 
 .sign-in-form-label,
 .sign-up-form-label{
-    @apply text-sm font-medium
+    @apply text-xs sm:text-sm font-medium dark:text-white-shade/70
 }
 
 .sign-in-form-input,
 .sign-up-form-input{
-    @apply w-full h-10 rounded border border-black/20 outline-0 text-sm px-3 focus:outline-1 outline-pri-col dark:border-white-shade/15
+    @apply w-full h-10 rounded border border-black/20 outline-0 text-xs sm:text-sm px-3 focus:outline-1 outline-pri-col dark:border-white-shade/15 dark:text-white-shade/70
 }
 
 .forgot-password{
      @apply text-sm font-medium text-pri-col dark:text-dark-accent
 }
+
+.dark input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
