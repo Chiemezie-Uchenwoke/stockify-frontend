@@ -10,18 +10,25 @@ const fetchWithAuth = async (url, options={}) => {
 
         if (response.status === 401 || response.status === 403) {
             const refreshToken = await refreshAuthToken();
+            const {fetchCurrentUser, setUser, logout} = useAuthStore.getState();
 
             if (refreshToken?.success) {
-                const { fetchCurrentUser } = useAuthStore.getState();
-                await fetchCurrentUser();
 
-                response = await fetch(url, {
-                    ...options,
-                    credentials: "include",
-                });
+                const user = await fetchCurrentUser();
+                if (user) {
+                    setUser(user);
+
+                    response = await fetch(url, {
+                        ...options,
+                        credentials: "include",
+                    });
+                }
 
                 return response;
             }
+
+            logout(); 
+            throw new Error("Session expired. User logged out.");
         }
 
         return response;

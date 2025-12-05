@@ -96,6 +96,7 @@ const refreshAuthToken = async () => {
         }
 
         return {
+            success: true,
             status: response.status,
             ...data
         }
@@ -106,7 +107,7 @@ const refreshAuthToken = async () => {
     }
 }
 
-const getAuthenticatedtUser = async () => {
+const getAuthenticatedUser = async () => {
     try {
             const response = await fetchWithAuth(`${apiBaseUrl}/api/auth/me`, {
             method: "GET",
@@ -123,7 +124,7 @@ const getAuthenticatedtUser = async () => {
 
 const requestPasswordReset = async (formData) => {
     try {
-        const response = await fetchWithAuth(`${apiBaseUrl}/api/auth/request-password-reset`, {
+        const response = await fetch(`${apiBaseUrl}/api/auth/request-password-reset`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -198,4 +199,4 @@ const verifyToken = async (formData) => {
     }
 }
 
-export {signUp, login, signOut, refreshAuthToken, getAuthenticatedtUser, requestPasswordReset, resetPassword, verifyToken};
+export {signUp, login, signOut, refreshAuthToken, getAuthenticatedUser, requestPasswordReset, resetPassword, verifyToken};

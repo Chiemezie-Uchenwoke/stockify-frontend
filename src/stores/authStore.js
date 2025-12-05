@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import { signOut } from "../services/authService";
-import { getAuthenticatedtUser } from "../services/authService";
+import { getAuthenticatedUser } from "../services/authService";
 
-const useAuthStore = create((set) => ({
+const useAuthStore = create((set, get) => ({
   user: null,
   isAuthenticated: false,
   isLoading: true,
@@ -24,23 +24,39 @@ const useAuthStore = create((set) => ({
   },
 
   fetchCurrentUser: async () => {
-    set({ isLoading: true });
+    const { user, isAuthenticated } = get();
+
+    if (!user && !isAuthenticated) {
+        set({ isLoading: true });
+    }
+
     try {
-        const authenticatedUser = await getAuthenticatedtUser();
+        const authenticatedUser = await getAuthenticatedUser();
 
         if (authenticatedUser?.success) {
-          set({user: authenticatedUser.user, isAuthenticated: true});
+            set({
+                user: authenticatedUser.user,
+                isAuthenticated: true,
+            });
+            return authenticatedUser.user;
         } else {
-          set({user: null, isAuthenticated: false});
+            set({
+                user: null,
+                isAuthenticated: false,
+            });
         }
 
-    } catch(err){
+    } catch (err) {
         console.error(err);
-        set({ user: null, isAuthenticated: false });
+        set({
+            user: null,
+            isAuthenticated: false,
+        });
     } finally {
         set({ isLoading: false });
     }
-  }
+}
+
 
 }));
 
