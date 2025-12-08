@@ -130,7 +130,7 @@ const BatchesView = () => {
                 totalCost: "",
                 type: "",
             });
-            
+
             setMode("list");
 
             const refreshed = await getAllBatches();
