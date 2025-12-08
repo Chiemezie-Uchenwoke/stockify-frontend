@@ -26,7 +26,7 @@ const DashboardContent = () => {
                 </div>
             </aside>
 
-            <div className="w-full md:w-[calc(100%-20%)] lg:w-[calc(100%-18%)] py-5 px-4">
+            <div className="w-full md:w-[calc(100%-20%)] lg:w-[calc(100%-18%)] h-[calc(100vh-8.5rem)] md:h-[calc(100vh-4rem)] overflow-y-auto py-5 px-4">
                 {view === "dashboard" && <DashboardView />}
                 {view === "batches" && <BatchesView />}
             </div>

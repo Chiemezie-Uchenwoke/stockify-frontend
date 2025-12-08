@@ -3,13 +3,26 @@ import AuthTextInput from "../../AuthTextInput/AuthTextInput";
 import FormButton from "../../FormButton/FormButton";
 import useThemeStore from "../../../stores/ThemeStore";
 import { FiRefreshCw } from "react-icons/fi";
+import CreateButton from "../CreateButton";
+import { useEffect, useState } from "react";
+import { getAllBatches } from "../../../services/batchService";
+import BatchTable from "../BatchTable";
 
 const BatchesView = () => {
     const {theme} = useThemeStore();
+    const [batches, setBatches] = useState([]);
+    useEffect(() => {
+        const fetchBatches = async () => {
+            const data = await getAllBatches();
+            setBatches(data.batches);
+        }
+
+        fetchBatches();
+    }, []);
 
     return (
-        <div className={`${theme === "dark" ? "dark" : "" } border border-black/15 dark:border-white-shade/15 rounded-2xl bg-light-surface dark:bg-dark-bg py-6 px-4`}>
-            <form className="flex flex-col gap-4">
+        <div className={`${theme === "dark" ? "dark" : "" } flex flex-col gap-8`}>
+            <form className="border border-black/20 dark:border-white-shade/15 rounded-2xl py-6 px-4 flex flex-col gap-4 bg-light-surface dark:bg-dark-bg ">
                 <div className="flex justify-between items-center">
                     <h3 className="text-sm font-semibold dark:text-white-shade/85">Filter Batches</h3>
                     <button 
@@ -49,6 +62,14 @@ const BatchesView = () => {
                     Apply Filter
                 </FormButton>
             </form>
+
+            <CreateButton 
+                label={"New"}
+            />
+    
+            <BatchTable 
+                batches={batches}
+            />
         </div>
     )
 };
