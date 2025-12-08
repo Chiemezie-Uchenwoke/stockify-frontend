@@ -59,3 +59,6 @@ body{
     filter: invert(1);
 }
 
+.form-select {
+    @apply w-full h-10 rounded border border-black/20 dark:border-white-shade/10 outline-0 text-xs sm:text-sm px-3 focus:outline-1 dark:bg-dark-surface dark:text-white-shade/80
+}
