@@ -1,10 +1,11 @@
 import { memo } from "react";
 import { MdEdit } from "react-icons/md";
 
-const BatchTable = ({batches}) => {
+const BatchTable = ({batches, setMode, setFormData, setSelectedBatchId}) => {
+
     return (
         <>
-            <div className="w-full overflow-x-auto border border-black/20 rounded-2xl bg-light-surface dark:bg-dark-surface py-6 px-4 hidden sm:flex flex-col gap-2">
+            <div className="w-full overflow-x-auto border border-black/20 rounded-2xl bg-light-surface dark:bg-dark-surface py-6 px-4 pb-10 hidden sm:flex flex-col gap-2">
                 <div className="flex justify-between items-center">
                     <h2 className="text-xs sm:text-sm font-semibold dark:text-white-shade/80">All Batches</h2>
                     <p className="text-xs sm:text-sm">
@@ -30,29 +31,42 @@ const BatchTable = ({batches}) => {
                             batches.map((batch, i) => {
                                 return (
                                     <tr key={batch._id} className="">
-                                        <td className="text-[10px] sm:text-xs border dark:border-white-shade/50 dark:text-white-shade/80 text-center whitespace-normal break-words py-1 px-2 sm:py-2 sm:px-4"> 
+                                        <td className="text-[10px] sm:text-xs border dark:border-white-shade/50 dark:text-white-shade/80 text-center whitespace-normal break-words py-2 px-2 sm:py-2 sm:px-4 h-20"> 
                                             {i + 1} 
                                         </td>
 
-                                        <td className="text-[10px] sm:text-xs border dark:border-white-shade/50 dark:text-white-shade/80 text-center whitespace-normal break-words py-1 px-2 sm:py-2 sm:px-4"> 
+                                        <td className="text-[10px] sm:text-xs border dark:border-white-shade/50 dark:text-white-shade/80 text-center whitespace-normal break-words py-2 px-2 sm:py-2 sm:px-4 capitalize h-20"> 
                                             {batch.batchName} 
                                         </td>
 
-                                        <td className="text-[10px] sm:text-xs border dark:border-white-shade/50 dark:text-white-shade/80 text-center whitespace-normal break-words py-1 px-2 sm:py-2 sm:px-4"> 
-                                            {batch.type} 
+                                        <td className={`text-[10px] sm:text-xs border dark:border-white-shade/50  text-center whitespace-normal break-words py-2 px-2 sm:py-2 sm:px-4 capitalize font-medium h-20`}> 
+                                            <p className={`${batch.type === "import" ? "text-purple-400 " : "text-amber-600"}`}>
+                                                {batch.type} 
+                                            </p>
                                         </td>
 
-                                        <td className="text-[10px] sm:text-xs border dark:border-white-shade/50 dark:text-white-shade/80 text-center whitespace-normal break-words py-1 px-2 sm:py-2 sm:px-4"> 
+                                        <td className="text-[10px] sm:text-xs border dark:border-white-shade/50 dark:text-white-shade/80 text-center whitespace-normal break-words py-2 px-2 sm:py-2 sm:px-4 h-20"> 
                                             {new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN" }).format(batch.totalCost) } 
                                         </td>
 
-                                        <td className="text-[10px] sm:text-xs border dark:border-white-shade/50 dark:text-white-shade/80 text-center whitespace-normal break-words py-1 px-2 sm:py-2 sm:px-4"> 
+                                        <td className="text-[10px] sm:text-xs border dark:border-white-shade/50 dark:text-white-shade/80 text-center whitespace-normal break-words py-2 px-2 sm:py-2 sm:px-4 h-20"> 
                                             { new Date(batch.importDate).toLocaleDateString("en-US", {dateStyle: "medium"}) } 
                                         </td>
 
-                                        <td className="text-[10px] sm:text-xs border dark:border-white-shade/50 dark:text-white-shade/80 text-center whitespace-normal break-words py-1 px-2 sm:py-2 sm:px-4"> 
-                                            <button>
-                                                    Update
+                                        <td className="text-[10px] sm:text-xs border dark:border-white-shade/50 dark:text-white-shade/80 text-center whitespace-normal break-words py-2 px-2 sm:py-2 sm:px-4 h-20 "> 
+                                            <button 
+                                                className=" text-xs bg-blue-500/80 text-white-shade py-1 px-2.5 flex items-center gap-1 cursor-pointer mx-auto active:translate-y-0.5"
+                                                onClick={() => {
+                                                    setMode("edit");
+                                                    setFormData({
+                                                        ...batch,
+                                                        importDate: new Date(batch.importDate).toISOString().split("T")[0],
+                                                    });
+                                                    setSelectedBatchId(batch._id);
+                                                }}
+                                            >
+                                                <MdEdit />
+                                                Edit
                                             </button>     
                                         </td>
                                     </tr>
@@ -63,7 +77,7 @@ const BatchTable = ({batches}) => {
                 </table>
             </div>
 
-            <div className=" sm:hidden flex flex-col gap-2">
+            <div className=" sm:hidden flex flex-col gap-4">
                 <div className="flex justify-between items-center">
                     <h2 className="text-xs sm:text-sm font-semibold dark:text-white-shade/80">All Batches</h2>
                     <p className="text-xs sm:text-sm">
@@ -72,7 +86,7 @@ const BatchTable = ({batches}) => {
                     </p>
                 </div>
 
-                <div className="">
+                <div className="flex flex-col gap-4">
                     {
                         batches.map((batch) => {
                             return (
@@ -81,7 +95,7 @@ const BatchTable = ({batches}) => {
                                     className="border border-black/20 dark:border-white-shade/10 bg-light-surface dark:bg-dark-surface py-4 px-2 rounded-2xl flex flex-col gap-2.5"
                                 >
                                     <div className="flex items-center justify-between gap-4">
-                                        <p className="text-xs font-semibold dark:text-white-shade/85"> {batch.batchName} </p>
+                                        <p className="text-xs font-semibold capitalize dark:text-white-shade/85"> {batch.batchName} </p>
                                         <p className="text-xs dark:text-white-shade/85"> {new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN" }).format(batch.totalCost) }  </p>
                                     </div>
 
@@ -91,7 +105,17 @@ const BatchTable = ({batches}) => {
                                             <p className={`text-[8px] ${batch.type === "import" ? "bg-green-400/20" : "bg-purple-700/20"} p-0.5 capitalize tracking-wide dark:text-white-shade/85`}> {batch.type} </p>
                                         </div>
 
-                                        <button className="text-xs bg-blue-500/80 text-white-shade py-1 px-1.5 flex items-center gap-1">
+                                        <button 
+                                            className="text-xs bg-blue-500/80 text-white-shade py-1 px-1.5 flex items-center gap-1"
+                                            onClick={() => {
+                                                setMode("edit");
+                                                setFormData({
+                                                    ...batch,
+                                                    importDate: new Date(batch.importDate).toISOString().split("T")[0],
+                                                });
+                                                setSelectedBatchId(batch._id);
+                                            }}
+                                        >
                                             <MdEdit />
                                             Edit
                                         </button>

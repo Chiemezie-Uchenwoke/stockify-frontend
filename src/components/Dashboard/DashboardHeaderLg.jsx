@@ -1,5 +1,5 @@
 import Logo from "../Logo/Logo";
-import { FaRegUser, FaPlus } from "react-icons/fa";
+import { FaRegUser} from "react-icons/fa";
 import useThemeStore from "../../stores/ThemeStore";
 import UserMenu from "./UserProfileMenu";
 import { useState } from "react";
@@ -19,16 +19,10 @@ const DashboardHeaderLg = () => {
 
             <div className="flex items-center gap-4">
                 <button 
-                    className="border border-black/30 p-2 rounded cursor-pointer bg-light-surface hover:brightness-95 duration-200 dark:bg-transparent dark:border-white-shade/20 dark:text-white-shade/70 outline-0"
+                    className="border border-black/30 p-2 rounded cursor-pointer bg-light-surface hover:brightness-95 duration-200 dark:bg-transparent dark:border-white-shade/30 dark:text-white-shade/70 outline-0"
                     onClick={() => setIsUserMenuOpen(prev => !prev)}
                 >
                     <FaRegUser />
-                </button>
-
-                <button 
-                    className="flex items-center gap-2 bg-pri-col text-white-shade py-2 px-4 rounded-lg font-medium text-sm cursor-pointer hover:bg-pri-hover duration-200"
-                >
-                    <FaPlus /> New Batch
                 </button>
             </div>
 

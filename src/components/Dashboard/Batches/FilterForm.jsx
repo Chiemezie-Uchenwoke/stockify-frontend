@@ -3,7 +3,7 @@ import AuthFormLabel from "../../AuthFormLabel/AuthFormLabel";
 import AuthTextInput from "../../AuthTextInput/AuthTextInput";
 import FormButton from "../../FormButton/FormButton";
 
-const FilterForm = () => {
+const FilterForm = ({setMode}) => {
     return (
         <form className="border border-black/20 dark:border-white-shade/15 rounded-2xl py-6 px-4 flex flex-col gap-4 bg-light-surface dark:bg-dark-bg ">
             <div className="flex justify-between items-center">
@@ -11,6 +11,7 @@ const FilterForm = () => {
                 <button 
                     type="reset" 
                     className="text-sm text-pri-col dark:text-dark-accent font-semibold flex items-center gap-2 cursor-pointer"
+                    onClick={() => setMode("list")}
                 >
                     <FiRefreshCw />
                     Clear
