@@ -17,7 +17,15 @@ const BatchForm = ({setMode, loading, formData, setFormData, handleAddNewBatch, 
                 <button 
                     className="border border-black/30 p-1 rounded cursor-pointer bg-white hover:brightness-95 dark:bg-dark-surface dark:border-white-shade/30 duration-200"
                     type="button"
-                    onClick={() => setMode("list")}
+                    onClick={() => {
+                        setMode("list");
+                        setFormData({
+                            batchName: "",
+                            importDate: "",
+                            totalCost: "",
+                            type: "",
+                        });
+                    }}
                 >
                     <IoMdClose />
                 </button>
