@@ -14,8 +14,8 @@ const DashboardContent = () => {
     // const {logout, user} = useAuthStore();
     
     return (
-        <div className={`${theme === "dark" ? "dark" : ""} w-full h-[calc(100vh-4rem)] md:flex `}>
-            <aside className="hidden md:flex flex-col justify-between bg-light-surface w-[20%] lg:w-[18%] h-full border-r border-black/10 dark:bg-dark-bg dark:border-white-shade/10 py-5 px-4 ">
+        <div className={`${theme === "dark" ? "dark" : ""} w-full 2xl:w-[65%] 2xl:mx-auto 2xl:border-r 2xl:border-black/10 dark:border-white-shade/10  h-[calc(100vh-4rem)] md:flex `}>
+            <aside className="hidden md:flex flex-col justify-between bg-light-surface w-[20%] lg:w-[18%] h-full border-r border-black/10 dark:bg-dark-bg dark:border-white-shade/10 py-5 px-4 2xl:border-l">
                 <SidebarLg 
                     currentView={view}
                     setView={setView} 

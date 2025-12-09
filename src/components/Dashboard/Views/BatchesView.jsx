@@ -149,7 +149,7 @@ const BatchesView = () => {
     }
 
     return (
-        <div className={`${theme === "dark" ? "dark" : "" } flex flex-col gap-8`}>
+        <div className={`${theme === "dark" ? "dark" : "" } flex flex-col gap-8 2xl:gap-12`}>
             { 
                 mode === "list" && 
                 <FilterForm setMode={setMode} />

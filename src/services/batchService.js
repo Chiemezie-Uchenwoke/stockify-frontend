@@ -85,4 +85,33 @@ const editBatch = async (formData, batchId) => {
     }
 }
 
-export {getAllBatches, addNewBatch, editBatch};
+const filterBatch = async (formData, batchId) => {
+    try {
+        const response = await fetchWithAuth(`${apiBaseUrl}/api/batch/${batchId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            return {
+                success: false,
+                message: data.message || "Failed to edit batch"
+            }
+        }
+
+        return data;
+    } catch (err){
+        console.error("Error editing batch: ", err);
+        return {
+            success: false,
+            message: "Network error. Please try again."
+        };
+    }
+}
+
+export {getAllBatches, addNewBatch, editBatch, filterBatch};

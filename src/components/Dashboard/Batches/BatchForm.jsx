@@ -40,7 +40,7 @@ const BatchForm = ({setMode, loading, formData, setFormData, handleAddNewBatch, 
                     <AuthTextInput 
                         id={"batchName"}
                         type="text"
-                        placeholder={"Enter batch name"}
+                        placeholder={"Ex: Batch-Nov-2025-A"}
                         value={formData.batchName}
                         onChange={(e) => setFormData((prev) => ({...prev, batchName: e.target.value}))}
                     />
