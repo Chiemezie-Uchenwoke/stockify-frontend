@@ -85,14 +85,14 @@ const editBatch = async (formData, batchId) => {
     }
 }
 
-const filterBatch = async (formData, batchId) => {
+const filterBatch = async (formData) => {
     try {
-        const response = await fetchWithAuth(`${apiBaseUrl}/api/batch/${batchId}`, {
-            method: "PUT",
+        const url = `${apiBaseUrl}/api/batch/filter?startDate=${formData.startDate}&endDate=${formData.endDate}`;
+        const response = await fetchWithAuth(url, {
+            method: "GET",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(formData),
         });
 
         const data = await response.json();
@@ -106,7 +106,7 @@ const filterBatch = async (formData, batchId) => {
 
         return data;
     } catch (err){
-        console.error("Error editing batch: ", err);
+        console.error("Error filtering batch: ", err);
         return {
             success: false,
             message: "Network error. Please try again."
