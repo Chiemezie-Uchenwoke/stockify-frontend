@@ -1,12 +1,11 @@
 import useThemeStore from "../../../stores/ThemeStore";
 import CreateButton from "../CreateButton";
 import { useEffect, useState } from "react";
-import { getAllBatches } from "../../../services/batchService";
 import BatchTable from "../Batches/BatchTable";
 import FilterForm from "../Batches/FilterForm";
 import BatchForm from "../Batches/BatchForm";
 import AlertMessage from "../../AlertMessage/AlertMessage";
-import { addNewBatch, editBatch } from "../../../services/batchService";
+import { addNewBatch, editBatch, filterBatch, getAllBatches } from "../../../services/batchService";
 
 const BatchesView = () => {
     const {theme} = useThemeStore();
@@ -25,6 +24,10 @@ const BatchesView = () => {
     });
     const [loading, setLoading] = useState(false);
     const [selectedBatchId, setSelectedBatchId] = useState(null);
+    const [filterFormData, setFilterFormData] = useState({
+        startDate: "",
+        endDate: "",
+    });
 
     useEffect(() => {
         const fetchBatches = async () => {
@@ -148,11 +151,67 @@ const BatchesView = () => {
         }
     }
 
+    const handleFilter = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setAlert({ type: "", message: "", title: "" });
+
+        if (!filterFormData.startDate || !filterFormData.endDate) {
+            setAlert({
+                type: "error",
+                title: "Error filtering Batch",
+                message: "Start date and end date are required."
+            });
+            setLoading(false);
+            return;
+        }
+
+        try {
+            const data = await filterBatch(filterFormData);
+
+            if (!data.success) {
+                setAlert({
+                    type: "error",
+                    title: "Error",
+                    message: data.message
+                });
+                return;
+            }
+
+            setAlert({
+                type: "success",
+                title: "Filter Batch",
+                message: data.message
+            });
+
+            setMode("list");
+            setBatches(data.batches);
+
+        } catch(err) {
+            console.error(err);
+            setAlert({
+                type: "error",
+                title: "Error",
+                message: "Failed to edit batch"
+            });
+        } finally {
+            setLoading(false);
+        }
+    }
+
     return (
         <div className={`${theme === "dark" ? "dark" : "" } flex flex-col gap-8 2xl:gap-12`}>
             { 
                 mode === "list" && 
-                <FilterForm setMode={setMode} />
+                <FilterForm 
+                    setMode={setMode}
+                    filterFormData={filterFormData}
+                    setFilterFormData={setFilterFormData}
+                    handleFilter={handleFilter}
+                    loading={loading}
+                    setBatches={setBatches}
+                    getAllBatches={getAllBatches}
+                />
             }
 
             {
