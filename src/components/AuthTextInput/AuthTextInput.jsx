@@ -4,7 +4,7 @@ const AuthTextInput = ({id, type="text", placeholder, value, onChange, onBlur}) 
         <input 
             type={type}
             placeholder={placeholder} 
-            className="sign-in-form-input"
+            className="batchFormInput"
             id={id}
             value={value}
             onChange={onChange}
