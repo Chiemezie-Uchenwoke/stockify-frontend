@@ -5,98 +5,28 @@ import FormButton from "../FormButton/FormButton";
 import AuthFormLabel from "../AuthFormLabel/AuthFormLabel";
 import AuthTextInput from "../AuthTextInput/AuthTextInput";
 import AlertMessage from "../AlertMessage/AlertMessage";
-import { login } from "../../services/authService";
-import { useState } from "react";
-import validateEmail from "../../utils/validateEmail";
-import { useNavigate } from "react-router";
-import useAuthStore from "../../stores/authStore";
 import HandlePasswordError from "../PasswordError/HandlePasswordError";
+import useLogin from "../../hooks/useLogin";
 
 const SignIn = () => {
-    const navigate = useNavigate();
     const {theme} = useThemeStore();
-    const {setUser, setIsAuthenticated, setIsLoading} = useAuthStore();
-    const [formData, setFormData] = useState({
-        email: "",
-        password: "",
-    });
-    const [loading, setLoading] = useState(false);
-    const [alert, setAlert] = useState({
-        type: "",
-        title: "",
-        message: "",
-    });
-    const [isPasswordTouched, setIsPasswordTouched] = useState(false);
+    const {
+        formData,
+        setFormData,
+        alert,
+        setAlert,
+        isPasswordTouched,
+        setIsPasswordTouched,
+        loading,
+        loginUser
+    } = useLogin();
 
-    const handleLogin = async (e) => {
+    const handleLogin = (e) => {
         e.preventDefault();
-        setLoading(true);
-
-        if (!formData.email || !formData.password) {
-            setAlert({
-                type: "error",
-                title: "Incomplete credentials",
-                message: "Missing required fields",
-            });
-            setLoading(false);
-            return;
-        }
-
-        if (!validateEmail(formData.email)){
-            setAlert({
-                type: "error",
-                title: "Invalid email",
-                message: "Check your email and try again.",
-            });
-            setLoading(false);
-            return;
-        }
-
-        try {
-            const data = await login(formData);
-
-            if (data.success) {
-                setLoading(false);
-                setIsLoading(false);
-                setUser(data.user);
-                setIsAuthenticated(true);
-                setFormData({
-                    email: "",
-                    password: "",
-                });
-
-                setIsPasswordTouched(false);
-
-                setAlert({
-                    type: "success",
-                    title: "Sign in successful.",
-                    message: data.message || "You logged in successfully",
-                });
-
-                setTimeout(() => navigate("/dashboard"), 3000);
-
-            } else {
-                setAlert({
-                    type: "error",
-                    title: "Sign in failed",
-                    message: data.message,
-                });
-
-                setLoading(false);
-            }
-
-        } catch(err) {
-            console.error("Error sigining in: ", err);
-            setAlert({
-                type: "error",
-                title: "Error",
-                message: "Internal server error. Please try again."
-            });
-        } finally {
-            setLoading(false);
-        }
+        loginUser();
     }
-
+    
+    
     return (
         <div className={`${theme === "dark" ? "dark" : ""} w-full h-screen flex justify-center items-center px-4`}>
             <div className="w-full max-w-100 border border-black/20 bg-light-surface rounded-2xl py-8 px-4 lg:px-6 flex flex-col gap-4 items-center dark:bg-dark-surface">

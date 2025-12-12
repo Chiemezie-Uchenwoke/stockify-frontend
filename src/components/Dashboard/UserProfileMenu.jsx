@@ -1,6 +1,7 @@
 import useAuthStore from "../../stores/authStore";
 import useThemeStore from "../../stores/ThemeStore";
 import ThemeButton from "../ThemeButton/ThemeButton";
+import LogoutButton from "../LogoutButton/LogoutButton";
 
 const UserMenu = ({ref}) => {
     const {user} = useAuthStore();
@@ -24,6 +25,8 @@ const UserMenu = ({ref}) => {
             <button className="text-sm cursor-pointer hover:underline">
                 Settings
             </button>
+
+            <LogoutButton />
         </div>
     )
 };
