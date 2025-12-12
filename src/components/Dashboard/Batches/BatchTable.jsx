@@ -1,7 +1,17 @@
-import { memo } from "react";
+import { memo, useState } from "react";
 import { MdEdit } from "react-icons/md";
+import PaginationButton from "../Components/PaginationButton";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 const BatchTable = ({batches, setMode, setFormData, setSelectedBatchId}) => {
+
+    const totalBatches = batches.length;
+    const [batchRange, setBatchRange] = useState({
+        minRange: 0,
+        maxRange: 8
+    });
+    const prevBtnDisable = batchRange.minRange === 0 ? true : false;
+    const nextBtnDisable = batchRange.maxRange === totalBatches ? true : false;
 
     return (
         <>
@@ -28,11 +38,11 @@ const BatchTable = ({batches, setMode, setFormData, setSelectedBatchId}) => {
 
                     <tbody>
                         {
-                            batches.map((batch, i) => {
+                            batches.slice(batchRange.minRange, batchRange.maxRange).map((batch, i) => {
                                 return (
                                     <tr key={batch._id} className="">
                                         <td className="text-[10px] sm:text-xs border dark:border-white-shade/50 dark:text-white-shade/80 text-center whitespace-normal break-words py-2 px-2 sm:py-2 sm:px-4 h-20"> 
-                                            {i + 1} 
+                                            {batchRange.minRange + i + 1} 
                                         </td>
 
                                         <td className="text-[10px] sm:text-xs border dark:border-white-shade/50 dark:text-white-shade/80 text-center whitespace-normal break-words py-2 px-2 sm:py-2 sm:px-4 capitalize h-20"> 
@@ -75,6 +85,25 @@ const BatchTable = ({batches, setMode, setFormData, setSelectedBatchId}) => {
                         }
                     </tbody>
                 </table>
+
+                <div className="flex justify-center gap-8 mt-8">
+                    <PaginationButton 
+                        label={"Previous"}
+                        disabled={prevBtnDisable}
+                        onClick={() =>
+                            setBatchRange((prev) => ({
+                                minRange: Math.max(prev.minRange - 8, 0),
+                                maxRange: Math.max(prev.maxRange - 8, 8)
+                            }))
+                        }
+                    />
+                
+                    <PaginationButton 
+                        label={"Next"}
+                        onClick={() => setBatchRange(prev => ({minRange: prev.minRange + 8, maxRange: Math.min(prev.maxRange + 8, totalBatches)}))}
+                        disabled={nextBtnDisable}
+                    />
+                </div>
             </div>
 
             <div className=" sm:hidden flex flex-col gap-4">
@@ -88,7 +117,7 @@ const BatchTable = ({batches, setMode, setFormData, setSelectedBatchId}) => {
 
                 <div className="flex flex-col gap-4">
                     {
-                        batches.map((batch) => {
+                        batches.slice(batchRange.minRange, batchRange.maxRange).map((batch) => {
                             return (
                                 <div 
                                     key={batch._id}
@@ -124,6 +153,25 @@ const BatchTable = ({batches, setMode, setFormData, setSelectedBatchId}) => {
                             )
                         })
                     }
+                </div>
+
+                <div className="flex justify-center gap-8 mt-7">
+                    <PaginationButton 
+                        label={"Previous"}
+                        disabled={prevBtnDisable}
+                        onClick={() =>
+                            setBatchRange((prev) => ({
+                                minRange: Math.max(prev.minRange - 8, 0),
+                                maxRange: Math.max(prev.maxRange - 8, 8)
+                            }))
+                        }
+                    />
+                
+                    <PaginationButton 
+                        label={"Next"}
+                        onClick={() => setBatchRange(prev => ({minRange: prev.minRange + 8, maxRange: Math.min(prev.maxRange + 8, totalBatches)}))}
+                        disabled={nextBtnDisable}
+                    />
                 </div>
             </div>
         </>
