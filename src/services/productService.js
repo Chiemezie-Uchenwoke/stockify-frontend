@@ -19,7 +19,7 @@ const getProductsByBatch = async (batchId) => {
         };
 
         return {
-            success: true,
+            success: data.message || true,
             message: data.message,
             products: data.products,
         };
@@ -55,7 +55,7 @@ const addNewProduct = async (batchId, formData) => {
         };
 
         return {
-            success: true,
+            success: data.message || true,
             message: data.message,
         };
 
@@ -68,4 +68,40 @@ const addNewProduct = async (batchId, formData) => {
     }
 };
 
-export {getProductsByBatch, addNewProduct};
+const editProduct = async (productId, formData) => {
+    try {
+
+        const response = await fetchWithAuth(`${apiBaseUrl}/api/products/${productId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            return {
+                success: false,
+                message: data.message || "Failed to edit product",
+            };
+        };
+
+        return {
+            success: data.message || true,
+            message: data.message,
+            updatedProduct: data.updatedProduct
+        };
+
+    } catch(err) {
+        console.error("Error editing product: ", err);
+        return {
+            success: false,
+            message: "Network error. Please try again."
+        };
+    }
+};
+
+export {getProductsByBatch, addNewProduct, editProduct};
