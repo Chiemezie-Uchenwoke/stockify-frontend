@@ -87,7 +87,12 @@ const editBatch = async (formData, batchId) => {
 
 const filterBatch = async (formData) => {
     try {
-        const url = `${apiBaseUrl}/api/batch/filter?startDate=${formData.startDate}&endDate=${formData.endDate}`;
+        const params = new URLSearchParams({
+            startDate: formData.startDate,
+            endDate: formData.endDate,
+        });
+
+        const url = `${apiBaseUrl}/api/batch/filter?${params.toString()}`;
         const response = await fetchWithAuth(url, {
             method: "GET",
             headers: {
