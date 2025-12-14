@@ -19,7 +19,7 @@ const getProductsByBatch = async (batchId) => {
         };
 
         return {
-            success: data.message || true,
+            success: data.success || true,
             message: data.message,
             products: data.products,
         };
@@ -55,7 +55,7 @@ const addNewProduct = async (batchId, formData) => {
         };
 
         return {
-            success: data.message || true,
+            success: data.success || true,
             message: data.message,
         };
 
@@ -90,7 +90,7 @@ const editProduct = async (productId, formData) => {
         };
 
         return {
-            success: data.message || true,
+            success: data.success || true,
             message: data.message,
             updatedProduct: data.updatedProduct
         };
@@ -104,4 +104,42 @@ const editProduct = async (productId, formData) => {
     }
 };
 
-export {getProductsByBatch, addNewProduct, editProduct};
+const filterProducts = async (formData) => {
+    try {
+
+        const params = new URLSearchParams({
+            productName: formData.productName,
+            startDate: formData.startDate,
+            endDate: formData.endDate,
+        });
+
+        const response = await fetchWithAuth(`${apiBaseUrl}/api/products/filter?${params.toString()}`, {
+            method: "GET"
+
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            return {
+                success: false,
+                message: data.message || "Failed to filtering products",
+            };
+        };
+
+        return {
+            success: data.success || true,
+            message: data.message,
+            products: data.products,
+        };
+
+    } catch(err) {
+        console.error("Error filtering products: ", err);
+        return {
+            success: false,
+            message: "Network error. Please try again."
+        };
+    }
+};
+
+export {getProductsByBatch, addNewProduct, editProduct, filterProducts};
