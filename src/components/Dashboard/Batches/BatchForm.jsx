@@ -1,7 +1,7 @@
 import AuthFormLabel from "../../AuthFormLabel/AuthFormLabel";
 import AuthTextInput from "../../AuthTextInput/AuthTextInput";
 import FormButton from "../../FormButton/FormButton";
-import { IoMdClose } from "react-icons/io";
+import CloseFormButton from "../CloseFormButton";
 
 const BatchForm = ({setMode, loading, formData, setFormData, handleAddNewBatch, formType="create", handleEdit}) => {
     return (
@@ -14,9 +14,7 @@ const BatchForm = ({setMode, loading, formData, setFormData, handleAddNewBatch, 
                     {formType === "create" ? "Add New Import or Retail Batch" : "Edit Batch"}
                 </h2>
                 
-                <button 
-                    className="border border-black/30 p-1 rounded cursor-pointer bg-white hover:brightness-95 dark:bg-dark-surface dark:border-white-shade/30 duration-200"
-                    type="button"
+                <CloseFormButton 
                     onClick={() => {
                         setMode("list");
                         setFormData({
@@ -26,9 +24,7 @@ const BatchForm = ({setMode, loading, formData, setFormData, handleAddNewBatch, 
                             type: "",
                         });
                     }}
-                >
-                    <IoMdClose />
-                </button>
+                />
             </div>
 
             <div className="flex flex-col gap-8 sm:flex-row">
