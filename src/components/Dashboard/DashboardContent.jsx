@@ -3,6 +3,7 @@ import useThemeStore from "../../stores/ThemeStore";
 import SidebarLg from "./Sidebar/SidebarLg";
 import DashboardView from "./Views/DashboardView";
 import BatchesView from "./Views/BatchesView";
+import ProductsView from "./Views/ProductsView";
 
 import SidebarSm from "./Sidebar/SidebarSm";
 // import useAuthStore from "../../stores/authStore";
@@ -29,6 +30,7 @@ const DashboardContent = () => {
             <div className="w-full md:w-[calc(100%-20%)] lg:w-[calc(100%-18%)] h-[calc(100vh-8.5rem)] md:h-[calc(100vh-4rem)] overflow-y-auto py-5 px-4">
                 {view === "dashboard" && <DashboardView />}
                 {view === "batches" && <BatchesView />}
+                {view === "products" && <ProductsView />}
             </div>
 
             <SidebarSm 
