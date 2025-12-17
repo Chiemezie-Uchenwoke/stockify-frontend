@@ -1,4 +1,6 @@
-const ProductsInBatch = ({product}) => {
+import EditProductsButton from "./EditProductButton";
+
+const ProductsInBatch = ({product, setMode, setSelectedProductId, setProductFormData}) => {
 
     return (
         <div className="border border-black/20 dark:border-white-shade/15 w-full py-6 px-4 rounded-2xl flex flex-col gap-2.5 bg-light-surface dark:bg-dark-surface shadow-lg">
@@ -28,6 +30,14 @@ const ProductsInBatch = ({product}) => {
                     {new Date(product.createdAt).toLocaleDateString("en-US", {dateStyle: "medium"}) }
                 </span>
             </p>
+
+            <EditProductsButton 
+                onClick={() => {
+                    setSelectedProductId(product.productId);
+                    setProductFormData(product); // pass data to be edited
+                    setMode("edit");
+                }}
+            />
         </div>
     )
 };

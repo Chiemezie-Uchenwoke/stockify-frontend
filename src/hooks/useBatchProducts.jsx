@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { addNewProduct, getProductsByBatch } from "../services/productService";
+import { addNewProduct, getProductsByBatch, editProduct } from "../services/productService";
 
 const useBatchProducts = () => {
   const [productFormData, setProductFormData] = useState({
@@ -94,6 +94,60 @@ const useBatchProducts = () => {
     }
   };
 
+  const editProductData = async (productId, productFormData, batchId) => {
+    setLoading(true);
+    resetAlert();
+
+    const { productName, quantity, costPrice, sellingPrice } = productFormData;
+
+    if (!productName || !quantity || !costPrice || !sellingPrice) {
+      setAlert({
+        type: "error",
+        title: "Incomplete field(s)",
+        message: "Missing required fields",
+      });
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const data = await editProduct(productId, productFormData);
+
+      if (!data.success) {
+        setAlert({
+          type: "error",
+          title: "Error",
+          message: data.message || "Error editing product",
+        });
+        return;
+      }
+
+      setAlert({
+        type: "success",
+        title: "Edit Product",
+        message: data.message,
+      });
+
+      setProductFormData({
+        productName: "",
+        quantity: "",
+        costPrice: "",
+        sellingPrice: "",
+      });
+
+      await getProducts(batchId); // keep UI in sync
+    } catch (err) {
+      console.error("Error editing product: ", err);
+      setAlert({
+        type: "error",
+        title: "Error",
+        message: "Internal server error. Please try again.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return {
     productFormData,
     setProductFormData,
@@ -104,6 +158,7 @@ const useBatchProducts = () => {
     setProducts,
     addProduct,
     getProducts,
+    editProductData
   };
 };
 

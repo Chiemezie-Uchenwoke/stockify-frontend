@@ -3,12 +3,27 @@ import AuthTextInput from "../../AuthTextInput/AuthTextInput";
 import CloseFormButton from "../CloseFormButton";
 import FormButton from "../../FormButton/FormButton";
 
-const AddProductsForm = ({formData, setMode, setProductFormData, selectedBatchId, loading, addProduct}) => {
+const AddProductsForm = ({formData, setMode, setProductFormData, selectedBatchId, loading, addProduct, editProduct, mode, selectedProductId}) => {
 
-    const handleAddProductByBatch = (e) => {
-        e.preventDefault();
+    const handleAddProductByBatch = () => {
         addProduct(selectedBatchId);
     }
+
+    const handleEditProduct = () => {
+        editProduct(selectedProductId, formData, selectedBatchId);
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        if (mode === "create") {
+            handleAddProductByBatch();
+        } else {
+            handleEditProduct();
+        }
+    };
+
+
     
     return (
         <div 
@@ -17,16 +32,27 @@ const AddProductsForm = ({formData, setMode, setProductFormData, selectedBatchId
             <div 
                 className="flex items-center justify-between"
             >
-                <h2 className="text-xs sm:text-sm font-semibold">Add product </h2>
+                <h2 className="text-xs sm:text-sm font-semibold"> { mode === "create" ? "Add product " : "Edit product" } </h2>
 
                 <CloseFormButton 
-                    onClick={() => setMode("view")}
+                    onClick={() => {
+                        mode === "create" ? setMode("view") : setMode("products");
+                        setProductFormData({
+                            productName: "",
+                            quantity: "",
+                            costPrice: "",
+                            sellingPrice: "",
+                        });
+                    }}
                 />
             </div>
 
             <form 
                 className="w-full flex flex-col gap-8"
-                onSubmit={handleAddProductByBatch}
+                onSubmit={(e) => {
+                    handleSubmit(e);
+                    mode === "create" ? setMode("create") : setMode("products");
+                }}
             >
                 <div className="flex flex-col sm:flex-row gap-4 w-full">
                     <div className="flex flex-col gap-2 w-full sm:w-1/2">
@@ -89,7 +115,7 @@ const AddProductsForm = ({formData, setMode, setProductFormData, selectedBatchId
                 </div>
 
                 <FormButton loading={loading}>
-                    Save
+                    {mode === "create" ? "Add Product" : "Update Product"}
                 </FormButton>
             </form>
         </div>

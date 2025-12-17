@@ -64,7 +64,7 @@ const RecentBatches = () => {
                                         }
                                     </p>
 
-                                    <p className={`capitalize text-xs py-1 px-1.5 rounded-lg ${batch.type === "import" ? "bg-purple-600 text-white-shade" : "bg-amber-600"}`}>
+                                    <p className={`capitalize text-xs py-1 px-1.5 rounded-lg ${batch.type === "import" ? "bg-purple-600 text-white-shade" : "bg-amber-600 text-white-shade"}`}>
                                         {batch.type}
                                     </p>
                                 </div>

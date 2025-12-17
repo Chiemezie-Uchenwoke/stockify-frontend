@@ -13,6 +13,7 @@ const ProductsView = () => {
     const [mode, setMode] = useState("view");
     const [allBatches, setAllBatches] = useState([]);
     const [selectedBatchId, setSelectedBatchId] = useState(null);
+    const [selectedProductId, setSelectedProductId] = useState(null);
     const {
         productFormData,
         setProductFormData,
@@ -20,8 +21,10 @@ const ProductsView = () => {
         setAlert,
         loading,
         products,
+        setProducts,
         addProduct,
         getProducts,
+        editProductData,
     } = useBatchProducts();
 
     useEffect(() => {
@@ -65,6 +68,22 @@ const ProductsView = () => {
                     getProducts={getProducts}
                     selectedBatchId={selectedBatchId}
                     loading={loading}
+                    mode={mode}
+                />
+            }
+
+            {
+                mode === "edit" &&
+                <AddProductsForm 
+                    setMode={setMode}
+                    formData={productFormData}
+                    setProductFormData={setProductFormData}
+                    editProduct={editProductData}
+                    getProducts={getProducts}
+                    selectedBatchId={selectedBatchId}
+                    loading={loading}
+                    mode={mode}
+                    selectedProductId={selectedProductId}
                 />
             }
 
@@ -73,6 +92,10 @@ const ProductsView = () => {
                 <ProductCard 
                     setMode={setMode}
                     products={products}
+                    setProduct={setProducts}
+                    setSelectedProductId={setSelectedProductId}
+                    setProductFormData={setProductFormData}
+
                 />
             }
 
