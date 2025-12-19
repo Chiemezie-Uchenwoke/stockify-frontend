@@ -15,10 +15,13 @@ const ProductsView = () => {
     const [allBatches, setAllBatches] = useState([]);
     const [selectedBatchId, setSelectedBatchId] = useState(null);
     const [selectedProductId, setSelectedProductId] = useState(null);
+    const [selectedProduct, setSelectedProduct] = useState(null);
     const [isSalesModalOpen, setIsSalesModalOpen] = useState(false);
     const {
         productFormData,
         setProductFormData,
+        salesFormData,
+        setSalesFormData,
         alert,
         setAlert,
         loading,
@@ -27,6 +30,7 @@ const ProductsView = () => {
         addProduct,
         getProducts,
         editProductData,
+        createSale,
     } = useBatchProducts();
 
     useEffect(() => {
@@ -98,6 +102,7 @@ const ProductsView = () => {
                     setSelectedProductId={setSelectedProductId}
                     setProductFormData={setProductFormData}
                     setIsSalesModalOpen={setIsSalesModalOpen}
+                    setSelectedProduct={setSelectedProduct}
 
                 />
             }
@@ -106,6 +111,12 @@ const ProductsView = () => {
                 isSalesModalOpen && 
                 <SalesModal 
                     setIsSalesModalOpen={setIsSalesModalOpen} 
+                    salesFormData={salesFormData}
+                    setSalesFormData={setSalesFormData}
+                    selectedProduct={selectedProduct}
+                    createSale={createSale}
+                    selectedBatchId={selectedBatchId}
+                    selectedProductId={selectedProductId}
                 />
             }
 
