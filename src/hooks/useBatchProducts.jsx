@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { addNewProduct, getProductsByBatch, editProduct } from "../services/productService";
+import { recordSale } from "../services/salesService";
 
 const useBatchProducts = () => {
   const [productFormData, setProductFormData] = useState({
@@ -13,6 +14,12 @@ const useBatchProducts = () => {
     type: "",
     title: "",
     message: "",
+  });
+
+  const [salesFormData, setSalesFormData] = useState({
+    quantitySold: "",
+    sellingPrice: "",
+    salesDate: "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -148,9 +155,63 @@ const useBatchProducts = () => {
     }
   }
 
+  const createSale = async (salesFormData, batchId, productId) => {
+    setLoading(true);
+    resetAlert();
+
+    const { quantitySold, sellingPrice, salesDate } = salesFormData;
+
+    if (!quantitySold || !sellingPrice || !salesDate) {
+      setAlert({
+        type: "error",
+        title: "Incomplete field(s)",
+        message: "Missing required fields",
+      });
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const data = await recordSale(salesFormData, batchId, productId);
+
+      if (!data.success) {
+        setAlert({
+          type: "error",
+          title: "Error",
+          message: data.message || "Error recording sale",
+        });
+        return;
+      }
+
+      setAlert({
+        type: "success",
+        title: "New Sale Record",
+        message: data.message,
+      });
+
+      setSalesFormData({
+        quantitySold: "",
+        sellingPrice: "",
+        salesDate: "",
+      });
+
+    } catch (err) {
+      console.error("Error recording new sale: ", err);
+      setAlert({
+        type: "error",
+        title: "Error",
+        message: "Internal server error. Please try again.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return {
     productFormData,
     setProductFormData,
+    salesFormData,
+    setSalesFormData,
     alert,
     setAlert,
     loading,
@@ -158,7 +219,8 @@ const useBatchProducts = () => {
     setProducts,
     addProduct,
     getProducts,
-    editProductData
+    editProductData,
+    createSale,
   };
 };
 
