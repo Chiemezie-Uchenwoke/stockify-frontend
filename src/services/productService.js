@@ -19,7 +19,7 @@ const getProductsByBatch = async (batchId) => {
         };
 
         return {
-            success: data.success || true,
+            success: data.success ?? true,
             message: data.message,
             products: data.products,
         };
@@ -55,7 +55,7 @@ const addNewProduct = async (batchId, formData) => {
         };
 
         return {
-            success: data.success || true,
+            success: data.success ?? true,
             message: data.message,
         };
 
@@ -90,7 +90,7 @@ const editProduct = async (productId, formData) => {
         };
 
         return {
-            success: data.success || true,
+            success: data.success ?? true,
             message: data.message,
             updatedProduct: data.updatedProduct
         };
@@ -128,7 +128,7 @@ const filterProducts = async (formData) => {
         };
 
         return {
-            success: data.success || true,
+            success: data.success ?? true,
             message: data.message,
             products: data.products,
         };
