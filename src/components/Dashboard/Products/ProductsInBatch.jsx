@@ -1,6 +1,7 @@
 import EditProductsButton from "./EditProductButton";
+import SaleButton from "./SaleButton";
 
-const ProductsInBatch = ({product, setMode, setSelectedProductId, setProductFormData}) => {
+const ProductsInBatch = ({product, setMode, setSelectedProductId, setProductFormData, setIsSalesModalOpen}) => {
 
     return (
         <div className="border border-black/20 dark:border-white-shade/15 w-full py-6 px-4 rounded-2xl flex flex-col gap-2.5 bg-light-surface dark:bg-dark-surface shadow-lg">
@@ -31,13 +32,19 @@ const ProductsInBatch = ({product, setMode, setSelectedProductId, setProductForm
                 </span>
             </p>
 
-            <EditProductsButton 
-                onClick={() => {
-                    setSelectedProductId(product.productId);
-                    setProductFormData(product); // pass data to be edited
-                    setMode("edit");
-                }}
-            />
+            <div className="flex items-center gap-3">
+                <EditProductsButton 
+                    onClick={() => {
+                        setSelectedProductId(product.productId);
+                        setProductFormData(product); // pass data to be edited
+                        setMode("edit");
+                    }}
+                />
+
+                <SaleButton 
+                    onClick={() => setIsSalesModalOpen(true)}
+                />
+            </div>
         </div>
     )
 };

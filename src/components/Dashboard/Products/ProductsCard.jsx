@@ -1,7 +1,7 @@
 import ProductsInBatch from "./ProductsInBatch";
 import ReturnToBatchButton from "./ReturnToBatchButton";
 
-const ProductCard = ({products, setMode, setProducts, setSelectedProductId, setProductFormData}) => {
+const ProductCard = ({products, setMode, setProducts, setSelectedProductId, setProductFormData, setIsSalesModalOpen}) => {
     
     return (
         <div className="flex flex-col gap-4">
@@ -24,6 +24,7 @@ const ProductCard = ({products, setMode, setProducts, setSelectedProductId, setP
                                 setSelectedProductId={setSelectedProductId}
                                 setMode={setMode}
                                 setProductFormData={setProductFormData}
+                                setIsSalesModalOpen={setIsSalesModalOpen}
                             />
                         )
                     })

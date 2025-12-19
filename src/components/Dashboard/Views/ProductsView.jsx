@@ -7,6 +7,7 @@ import AddProductsForm from "../Products/AddProductsForm";
 import useBatchProducts from "../../../hooks/useBatchProducts";
 import AlertMessage from "../../AlertMessage/AlertMessage";
 import ProductCard from "../Products/ProductsCard";
+import SalesModal from "../SalesModal/SalesModal";
 
 const ProductsView = () => {
     const {theme} = useThemeStore();
@@ -14,6 +15,7 @@ const ProductsView = () => {
     const [allBatches, setAllBatches] = useState([]);
     const [selectedBatchId, setSelectedBatchId] = useState(null);
     const [selectedProductId, setSelectedProductId] = useState(null);
+    const [isSalesModalOpen, setIsSalesModalOpen] = useState(false);
     const {
         productFormData,
         setProductFormData,
@@ -95,7 +97,15 @@ const ProductsView = () => {
                     setProduct={setProducts}
                     setSelectedProductId={setSelectedProductId}
                     setProductFormData={setProductFormData}
+                    setIsSalesModalOpen={setIsSalesModalOpen}
 
+                />
+            }
+
+            {
+                isSalesModalOpen && 
+                <SalesModal 
+                    setIsSalesModalOpen={setIsSalesModalOpen} 
                 />
             }
 
