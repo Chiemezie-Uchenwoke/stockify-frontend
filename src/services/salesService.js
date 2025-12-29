@@ -24,7 +24,7 @@ const recordSale = async (formData, batchId, productId) => {
 
         return {
             success: data.success ?? true,
-            message: data.message,
+            message: data.message || "Sale recorded successfully",
         };
 
     } catch(err) {
@@ -36,4 +36,31 @@ const recordSale = async (formData, batchId, productId) => {
     }
 };
 
-export {recordSale};
+const getSales = async (batchId) => {
+    try {
+        const response = await fetchWithAuth(`${apiBaseUrl}/api/sale/${batchId}`);
+        const data = await response.json();
+
+        if (!response.ok) {
+            return {
+                success: false,
+                message: data.message || "Failed to get batch sales",
+            }
+        }
+
+        return {
+            success: data.success ?? true,
+            message: data.message || "Sales record fetched successfully",
+            sales: data.sales,
+        }
+
+    } catch (err) {
+        console.error("Error retrieving batch sales: ", err);
+        return {
+            success: false,
+            message: "Network error. Please try again."
+        };
+    }
+}
+
+export {recordSale, getSales};
