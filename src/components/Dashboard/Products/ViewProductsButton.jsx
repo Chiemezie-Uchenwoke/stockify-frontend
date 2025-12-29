@@ -1,4 +1,4 @@
-const ViewProductsButton = ({label, onClick}) => {
+const ViewButton = ({label, onClick}) => {
     return (
         <button 
             className="text-xs font-medium hover:underline cursor-pointer dark:text-white-shade/80 outline-0            "
@@ -9,4 +9,4 @@ const ViewProductsButton = ({label, onClick}) => {
     )
 }
 
-export default ViewProductsButton;
+export default ViewButton;

@@ -1,5 +1,5 @@
 import AddProductsButton from "./AddProductsButton"
-import ViewProductsButton from "./ViewProductsButton"
+import ViewButton from "./ViewProductsButton"
 
 const BatchCard = ({batchName, onAddProduct, _id, setMode, getProducts, setSelectedBatchId}) => {
     return (
@@ -16,14 +16,25 @@ const BatchCard = ({batchName, onAddProduct, _id, setMode, getProducts, setSelec
                 }}
             />
 
-            <ViewProductsButton 
-                label={"View Products"}
-                onClick={() => {
-                    setSelectedBatchId(_id);
-                    setMode("products");
-                    getProducts(_id);
-                }}
-            />
+            <div className="flex flex-col items-start gap-3">
+                <ViewButton 
+                    label={"View Products"}
+                    onClick={() => {
+                        setSelectedBatchId(_id);
+                        setMode("products");
+                        getProducts(_id);
+                    }}
+                />
+
+                <ViewButton 
+                    label={"View Sales"}
+                    onClick={() => {
+                        setSelectedBatchId(_id);
+                        setMode("batch-sales");
+                        // getProducts(_id);
+                    }}
+                />
+            </div>
         </div>
     )
 };
