@@ -8,6 +8,7 @@ import useBatchProducts from "../../../hooks/useBatchProducts";
 import AlertMessage from "../../AlertMessage/AlertMessage";
 import ProductCard from "../Products/ProductsCard";
 import SalesModal from "../SalesModal/SalesModal";
+import BatchSalesOverview from "../Products/BatchSalesOverview";
 
 const ProductsView = () => {
     const {theme} = useThemeStore();
@@ -31,6 +32,9 @@ const ProductsView = () => {
         getProducts,
         editProductData,
         createSale,
+        batchSales,
+        setBatchSales,
+        getBatchSales,
     } = useBatchProducts();
 
     useEffect(() => {
@@ -57,6 +61,7 @@ const ProductsView = () => {
                                     setSelectedBatchId={() => setSelectedBatchId(batch._id)}
                                     setMode={setMode}
                                     getProducts={getProducts}
+                                    getBatchSales={getBatchSales}
                                 />
                             )
                         })
@@ -104,6 +109,15 @@ const ProductsView = () => {
                     setIsSalesModalOpen={setIsSalesModalOpen}
                     setSelectedProduct={setSelectedProduct}
 
+                />
+            }
+
+            {
+                mode === "batch-sales" &&
+                <BatchSalesOverview 
+                    setMode={setMode}
+                    batchSales={batchSales}
+                    setBatchSales={setBatchSales}
                 />
             }
 

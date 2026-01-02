@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { addNewProduct, getProductsByBatch, editProduct } from "../services/productService";
-import { recordSale } from "../services/salesService";
+import { recordSale, getSales } from "../services/salesService";
 
 const useBatchProducts = () => {
   const [productFormData, setProductFormData] = useState({
@@ -24,6 +24,7 @@ const useBatchProducts = () => {
 
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([]);
+  const [batchSales, setBatchSales] = useState([]);
 
   const resetAlert = () =>
     setAlert({ type: "", title: "", message: "" });
@@ -207,6 +208,27 @@ const useBatchProducts = () => {
     }
   }
 
+  const getBatchSales = useCallback(async (batchId) => {
+    setLoading(true);
+    setBatchSales([]);
+
+    try {
+      const data = await getSales(batchId);
+
+      if (!data.success) {
+        throw new Error("Error getting batch sales");
+      }
+
+      setBatchSales(data.sales ?? []);
+
+    } catch (err) {
+      console.error("Error getting sales: ", err);
+
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+  
   return {
     productFormData,
     setProductFormData,
@@ -221,6 +243,9 @@ const useBatchProducts = () => {
     getProducts,
     editProductData,
     createSale,
+    batchSales,
+    setBatchSales,
+    getBatchSales,
   };
 };
 

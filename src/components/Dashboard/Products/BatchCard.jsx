@@ -1,7 +1,12 @@
 import AddProductsButton from "./AddProductsButton"
 import ViewButton from "./ViewProductsButton"
 
-const BatchCard = ({batchName, onAddProduct, _id, setMode, getProducts, setSelectedBatchId}) => {
+const BatchCard = ({batchName, onAddProduct, _id, setMode, getProducts, setSelectedBatchId, getBatchSales}) => {
+
+    const fetchBatchSales = async () => {
+        await getBatchSales(_id);
+    } 
+
     return (
         <div 
             className="flex flex-col gap-3 w-full max-w-100 border border-black/20 dark:border-white-shade/15 rounded-2xl p-4 bg-light-surface dark:bg-dark-surface "
@@ -31,7 +36,7 @@ const BatchCard = ({batchName, onAddProduct, _id, setMode, getProducts, setSelec
                     onClick={() => {
                         setSelectedBatchId(_id);
                         setMode("batch-sales");
-                        // getProducts(_id);
+                        fetchBatchSales();
                     }}
                 />
             </div>
