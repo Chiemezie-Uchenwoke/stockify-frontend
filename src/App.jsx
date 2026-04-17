@@ -3,12 +3,19 @@ import HomePage from "./pages/HomePage";
 import SignInPage from "./pages/SignInPage";
 import RegisterPage from "./pages/RegisterPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
-import DashboardPage from "./pages/DashboardPage";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import NotFoundPage from "./pages/NotFoundPage";
 import useThemeStore from "./stores/ThemeStore";
 import { useEffect } from "react";
 import useAuthStore from "./stores/authStore";
+import DashboardLayout from "./components/Dashboard/DashboardLayout";
+import DashboardOverviewPage from "./pages/dashboard/DashboardOverviewPage";
+import BatchesPage from "./pages/dashboard/BatchesPage";
+import ProductsPage from "./pages/dashboard/ProductsPage";
+import SalesPage from "./pages/dashboard/SalesPage";
+import ExpensesPage from "./pages/dashboard/ExpensesPage";
+import ReportsPage from "./pages/dashboard/ReportsPage";
+import SettingsPage from "./pages/dashboard/SettingsPage";
 
 function App() {
   const {theme} = useThemeStore();
@@ -37,8 +44,17 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         
         <Route element={<ProtectedRoute />}>
-          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/dashboard" element={<DashboardLayout />}>
+            <Route index element={<DashboardOverviewPage />} />
+            <Route path="batches" element={<BatchesPage />} />
+            <Route path="products" element={<ProductsPage />} />
+            <Route path="sales" element={<SalesPage />} />
+            <Route path="expenses" element={<ExpensesPage />} />
+            <Route path="reports" element={<ReportsPage />} />
+            <Route path="settings" element={<SettingsPage />} />
+          </Route>
         </Route>
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>
   )

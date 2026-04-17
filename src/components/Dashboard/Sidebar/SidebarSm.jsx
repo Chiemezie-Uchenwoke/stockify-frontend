@@ -2,7 +2,7 @@ import sidebarViews from "../../../data/sidebarViewsData";
 import SidebarButton from "./SidebarButton";
 import useThemeStore from "../../../stores/ThemeStore";
 
-const SidebarSm = ({currentView, setView}) => {
+const SidebarSm = () => {
     const {theme} = useThemeStore();
 
     return (
@@ -14,8 +14,6 @@ const SidebarSm = ({currentView, setView}) => {
                             <SidebarButton 
                                 key={item.id}
                                 {...item}
-                                isActive={item.view === currentView}
-                                setView={setView}
                             />
                         )
                     })
