@@ -2,10 +2,12 @@ import useAuthStore from "../../stores/authStore";
 import useThemeStore from "../../stores/ThemeStore";
 import ThemeButton from "../ThemeButton/ThemeButton";
 import LogoutButton from "../LogoutButton/LogoutButton";
+import { useNavigate } from "react-router";
 
 const UserMenu = ({ref}) => {
     const {user} = useAuthStore();
     const {theme} = useThemeStore();
+    const navigate = useNavigate();
 
     return (
         <div 
@@ -22,7 +24,10 @@ const UserMenu = ({ref}) => {
 
             <ThemeButton />
 
-            <button className="text-sm cursor-pointer hover:underline">
+            <button 
+                className="text-sm cursor-pointer hover:underline"
+                onClick={() => navigate("/dashboard/settings")}
+            >
                 Settings
             </button>
 
