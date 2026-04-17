@@ -26,9 +26,16 @@ const ExpensesPage = () => {
     const [expenses, setExpenses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
-    const [editingExpenseId, setEditingExpenseId] = useState(null);
     const [formData, setFormData] = useState({
         batchId: "",
+        category: "Shipping",
+        description: "",
+        amount: "",
+        expenseDate: "",
+    });
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [editingExpenseId, setEditingExpenseId] = useState(null);
+    const [editFormData, setEditFormData] = useState({
         category: "Shipping",
         description: "",
         amount: "",
@@ -84,7 +91,6 @@ const ExpensesPage = () => {
             amount: "",
             expenseDate: "",
         });
-        setEditingExpenseId(null);
     };
 
     const handleSubmit = async (e) => {
@@ -99,9 +105,7 @@ const ExpensesPage = () => {
             expenseDate: formData.expenseDate || new Date().toISOString(),
         };
 
-        const response = editingExpenseId
-            ? await editExpense(editingExpenseId, payload)
-            : await addExpense(formData.batchId, payload);
+        const response = await addExpense(formData.batchId, payload);
 
         if (!response.success) {
             setAlert({
@@ -115,7 +119,7 @@ const ExpensesPage = () => {
 
         setAlert({
             type: "success",
-            title: editingExpenseId ? "Edit Expense" : "New Expense",
+            title: "New Expense",
             message: response.message,
         });
 
@@ -141,15 +145,62 @@ const ExpensesPage = () => {
     };
 
     const handleEditExpense = (expense) => {
-        const matchedBatch = batches.find((batch) => batch.batchName === expense.batchName);
         setEditingExpenseId(expense.expenseId);
-        setFormData({
-            batchId: matchedBatch?._id || "",
+        setEditFormData({
             category: expense.category,
             description: expense.description,
             amount: String(expense.amount || ""),
             expenseDate: expense.expenseDate ? new Date(expense.expenseDate).toISOString().split("T")[0] : "",
         });
+        setIsEditModalOpen(true);
+    };
+
+    const closeEditModal = () => {
+        setIsEditModalOpen(false);
+        setEditingExpenseId(null);
+        setEditFormData({
+            category: "Shipping",
+            description: "",
+            amount: "",
+            expenseDate: "",
+        });
+    };
+
+    const handleEditSubmit = async (e) => {
+        e.preventDefault();
+        if (!editingExpenseId) return;
+
+        setSubmitting(true);
+        setAlert({ type: "", title: "", message: "" });
+
+        const payload = {
+            category: editFormData.category,
+            description: editFormData.description,
+            amount: editFormData.amount,
+            expenseDate: editFormData.expenseDate,
+        };
+
+        const response = await editExpense(editingExpenseId, payload);
+
+        if (!response.success) {
+            setAlert({
+                type: "error",
+                title: "Edit Expense",
+                message: response.message,
+            });
+            setSubmitting(false);
+            return;
+        }
+
+        setAlert({
+            type: "success",
+            title: "Edit Expense",
+            message: response.message,
+        });
+
+        closeEditModal();
+        await fetchPageData();
+        setSubmitting(false);
     };
 
     const selectFieldClassName = "border border-black/15 dark:border-white-shade/20 rounded-lg px-3 py-2 text-sm dark:text-white-shade outline-none bg-light-surface dark:bg-dark-bg [&>option]:text-black [&>option]:bg-white dark:[&>option]:text-white-shade dark:[&>option]:bg-dark-bg";
@@ -171,7 +222,6 @@ const ExpensesPage = () => {
                         onChange={(e) => setFormData((prev) => ({ ...prev, batchId: e.target.value }))}
                         className={selectFieldClassName}
                         required
-                        disabled={editingExpenseId !== null}
                     >
                         {batches.map((batch) => (
                             <option key={batch._id} value={batch._id}>{batch.batchName}</option>
@@ -229,13 +279,8 @@ const ExpensesPage = () => {
                 </div>
                 <div className="sm:col-span-2 flex gap-3">
                     <button type="submit" disabled={submitting} className="rounded-lg bg-pri-col hover:bg-pri-hover text-white-shade text-sm font-medium px-4 py-2 disabled:bg-pri-col/50 cursor-pointer">
-                        {submitting ? "Saving..." : editingExpenseId ? "Update Expense" : "Add Expense"}
+                        {submitting ? "Saving..." : "Add Expense"}
                     </button>
-                    {editingExpenseId && (
-                        <button type="button" onClick={resetForm} className="rounded-lg border border-black/15 dark:border-white-shade/20 text-sm dark:text-white-shade px-4 py-2 cursor-pointer">
-                            Cancel Edit
-                        </button>
-                    )}
                 </div>
             </form>
 
@@ -317,6 +362,85 @@ const ExpensesPage = () => {
                     </div>
                 )}
             </div>
+
+            {isEditModalOpen && (
+                <div className="fixed inset-0 z-40 bg-black/50 flex items-center justify-center px-4">
+                    <div className="w-full max-w-lg rounded-xl border border-black/10 dark:border-white-shade/10 bg-light-surface dark:bg-dark-surface p-4">
+                        <h2 className="text-base font-semibold text-black/90 dark:text-white-shade">Edit Expense</h2>
+                        <form onSubmit={handleEditSubmit} className="mt-4 grid grid-cols-1 gap-3">
+                            <div className="flex flex-col gap-1">
+                                <label htmlFor="edit-expense-category" className="text-xs text-black/60 dark:text-white-shade/70">Category</label>
+                                <select
+                                    id="edit-expense-category"
+                                    value={editFormData.category}
+                                    onChange={(e) => setEditFormData((prev) => ({ ...prev, category: e.target.value }))}
+                                    className={selectFieldClassName}
+                                    required
+                                >
+                                    {expenseCategories.map((category) => (
+                                        <option key={category} value={category}>{category}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className="flex flex-col gap-1">
+                                <label htmlFor="edit-expense-amount" className="text-xs text-black/60 dark:text-white-shade/70">Amount</label>
+                                <input
+                                    id="edit-expense-amount"
+                                    type="number"
+                                    min="0"
+                                    step="0.01"
+                                    value={editFormData.amount}
+                                    onChange={(e) => setEditFormData((prev) => ({ ...prev, amount: e.target.value }))}
+                                    className={inputFieldClassName}
+                                    required
+                                />
+                            </div>
+
+                            <div className="flex flex-col gap-1">
+                                <label htmlFor="edit-expense-date" className="text-xs text-black/60 dark:text-white-shade/70">Expense Date</label>
+                                <input
+                                    id="edit-expense-date"
+                                    type="date"
+                                    value={editFormData.expenseDate}
+                                    onChange={(e) => setEditFormData((prev) => ({ ...prev, expenseDate: e.target.value }))}
+                                    className={inputFieldClassName}
+                                    required
+                                />
+                            </div>
+
+                            <div className="flex flex-col gap-1">
+                                <label htmlFor="edit-expense-description" className="text-xs text-black/60 dark:text-white-shade/70">Description</label>
+                                <textarea
+                                    id="edit-expense-description"
+                                    rows={3}
+                                    value={editFormData.description}
+                                    onChange={(e) => setEditFormData((prev) => ({ ...prev, description: e.target.value }))}
+                                    className="border border-black/15 dark:border-white-shade/20 rounded-lg px-3 py-2 text-sm dark:text-white-shade outline-none resize-none"
+                                    required
+                                />
+                            </div>
+
+                            <div className="flex justify-end gap-2 mt-2">
+                                <button
+                                    type="button"
+                                    onClick={closeEditModal}
+                                    className="rounded-lg border border-black/15 dark:border-white-shade/20 text-sm dark:text-white-shade px-4 py-2 cursor-pointer"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    disabled={submitting}
+                                    className="rounded-lg bg-pri-col hover:bg-pri-hover text-white-shade text-sm font-medium px-4 py-2 disabled:bg-pri-col/50 cursor-pointer"
+                                >
+                                    {submitting ? "Updating..." : "Update Expense"}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
 
             <AlertMessage
                 type={alert.type}
