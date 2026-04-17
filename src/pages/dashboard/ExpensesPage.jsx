@@ -1,11 +1,330 @@
-import DashboardPlaceholderView from "../../components/Dashboard/Views/DashboardPlaceholderView";
+import { useEffect, useMemo, useState } from "react";
+import AlertMessage from "../../components/AlertMessage/AlertMessage";
+import { getAllBatches } from "../../services/batchService";
+import { addExpense, editExpense, filterExpense } from "../../services/expenseService";
+import useThemeStore from "../../stores/ThemeStore";
+
+const expenseCategories = ["Shipping", "Customs", "Transport", "Warehouse", "Other"];
+
+const formatCurrency = (amount) => {
+    const value = Number(amount || 0);
+    return new Intl.NumberFormat("en-NG", {
+        style: "currency",
+        currency: "NGN",
+        maximumFractionDigits: 2,
+    }).format(value);
+};
+
+const formatDate = (value) => {
+    if (!value) return "N/A";
+    return new Date(value).toLocaleDateString();
+};
 
 const ExpensesPage = () => {
+    const { theme } = useThemeStore();
+    const [batches, setBatches] = useState([]);
+    const [expenses, setExpenses] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [submitting, setSubmitting] = useState(false);
+    const [editingExpenseId, setEditingExpenseId] = useState(null);
+    const [formData, setFormData] = useState({
+        batchId: "",
+        category: "Shipping",
+        description: "",
+        amount: "",
+        expenseDate: "",
+    });
+    const [filterFormData, setFilterFormData] = useState({
+        category: "",
+        startDate: "",
+        endDate: "",
+    });
+    const [alert, setAlert] = useState({ type: "", title: "", message: "" });
+
+    const totalExpense = useMemo(() => {
+        return expenses.reduce((sum, expense) => sum + Number(expense.amount || 0), 0);
+    }, [expenses]);
+
+    const fetchPageData = async () => {
+        setLoading(true);
+        const [batchesResponse, expensesResponse] = await Promise.all([
+            getAllBatches(),
+            filterExpense({}),
+        ]);
+
+        if (batchesResponse.success) {
+            setBatches(batchesResponse.batches || []);
+            setFormData((prev) => ({
+                ...prev,
+                batchId: prev.batchId || batchesResponse.batches?.[0]?._id || "",
+            }));
+        }
+
+        if (expensesResponse.success) {
+            setExpenses(expensesResponse.expenses || []);
+        } else {
+            setAlert({
+                type: "error",
+                title: "Expenses",
+                message: expensesResponse.message,
+            });
+        }
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        fetchPageData();
+    }, []);
+
+    const resetForm = () => {
+        setFormData({
+            batchId: batches[0]?._id || "",
+            category: "Shipping",
+            description: "",
+            amount: "",
+            expenseDate: "",
+        });
+        setEditingExpenseId(null);
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setSubmitting(true);
+        setAlert({ type: "", title: "", message: "" });
+
+        const payload = {
+            category: formData.category,
+            description: formData.description,
+            amount: formData.amount,
+            expenseDate: formData.expenseDate || new Date().toISOString(),
+        };
+
+        const response = editingExpenseId
+            ? await editExpense(editingExpenseId, payload)
+            : await addExpense(formData.batchId, payload);
+
+        if (!response.success) {
+            setAlert({
+                type: "error",
+                title: "Expense",
+                message: response.message,
+            });
+            setSubmitting(false);
+            return;
+        }
+
+        setAlert({
+            type: "success",
+            title: editingExpenseId ? "Edit Expense" : "New Expense",
+            message: response.message,
+        });
+
+        resetForm();
+        await fetchPageData();
+        setSubmitting(false);
+    };
+
+    const handleApplyFilter = async (e) => {
+        e.preventDefault();
+        const response = await filterExpense(filterFormData);
+
+        if (!response.success) {
+            setAlert({
+                type: "error",
+                title: "Filter Expenses",
+                message: response.message,
+            });
+            return;
+        }
+
+        setExpenses(response.expenses || []);
+    };
+
+    const handleEditExpense = (expense) => {
+        const matchedBatch = batches.find((batch) => batch.batchName === expense.batchName);
+        setEditingExpenseId(expense.expenseId);
+        setFormData({
+            batchId: matchedBatch?._id || "",
+            category: expense.category,
+            description: expense.description,
+            amount: String(expense.amount || ""),
+            expenseDate: expense.expenseDate ? new Date(expense.expenseDate).toISOString().split("T")[0] : "",
+        });
+    };
+
+    const selectFieldClassName = "border border-black/15 dark:border-white-shade/20 rounded-lg px-3 py-2 text-sm dark:text-white-shade outline-none bg-light-surface dark:bg-dark-bg [&>option]:text-black [&>option]:bg-white dark:[&>option]:text-white-shade dark:[&>option]:bg-dark-bg";
+    const inputFieldClassName = "border border-black/15 dark:border-white-shade/20 rounded-lg px-3 py-2 text-sm dark:text-white-shade outline-none";
+
     return (
-        <DashboardPlaceholderView
-            title="Expenses"
-            description="Expenses has been moved to a dedicated route-based page so the feature can be built as a standalone module."
-        />
+        <section className={`${theme === "dark" ? "dark" : ""} flex flex-col gap-6`}>
+            <article className="rounded-xl border border-black/10 dark:border-white-shade/10 bg-light-surface dark:bg-dark-surface p-4">
+                <p className="text-xs text-black/60 dark:text-white-shade/70">Total Expense</p>
+                <p className="text-xl font-semibold text-black/90 dark:text-white-shade mt-2">{formatCurrency(totalExpense)}</p>
+            </article>
+
+            <form onSubmit={handleSubmit} className="rounded-xl border border-black/10 dark:border-white-shade/10 bg-light-surface dark:bg-dark-surface p-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1">
+                    <label htmlFor="expense-batch" className="text-xs text-black/60 dark:text-white-shade/70">Batch</label>
+                    <select
+                        id="expense-batch"
+                        value={formData.batchId}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, batchId: e.target.value }))}
+                        className={selectFieldClassName}
+                        required
+                        disabled={editingExpenseId !== null}
+                    >
+                        {batches.map((batch) => (
+                            <option key={batch._id} value={batch._id}>{batch.batchName}</option>
+                        ))}
+                    </select>
+                </div>
+                <div className="flex flex-col gap-1">
+                    <label htmlFor="expense-category" className="text-xs text-black/60 dark:text-white-shade/70">Category</label>
+                    <select
+                        id="expense-category"
+                        value={formData.category}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, category: e.target.value }))}
+                        className={selectFieldClassName}
+                    >
+                        {expenseCategories.map((category) => (
+                            <option key={category} value={category}>{category}</option>
+                        ))}
+                    </select>
+                </div>
+                <div className="flex flex-col gap-1">
+                    <label htmlFor="expense-amount" className="text-xs text-black/60 dark:text-white-shade/70">Amount</label>
+                    <input
+                        id="expense-amount"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        placeholder="Enter amount"
+                        value={formData.amount}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, amount: e.target.value }))}
+                        className={inputFieldClassName}
+                        required
+                    />
+                </div>
+                <div className="flex flex-col gap-1">
+                    <label htmlFor="expense-date" className="text-xs text-black/60 dark:text-white-shade/70">Expense Date</label>
+                    <input
+                        id="expense-date"
+                        type="date"
+                        value={formData.expenseDate}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, expenseDate: e.target.value }))}
+                        className={inputFieldClassName}
+                    />
+                </div>
+                <div className="sm:col-span-2 flex flex-col gap-1">
+                    <label htmlFor="expense-description" className="text-xs text-black/60 dark:text-white-shade/70">Description</label>
+                    <textarea
+                        id="expense-description"
+                        rows={3}
+                        placeholder="Enter expense description"
+                        value={formData.description}
+                        onChange={(e) => setFormData((prev) => ({ ...prev, description: e.target.value }))}
+                        className="border border-black/15 dark:border-white-shade/20 rounded-lg px-3 py-2 text-sm dark:text-white-shade outline-none resize-none"
+                        required
+                    />
+                </div>
+                <div className="sm:col-span-2 flex gap-3">
+                    <button type="submit" disabled={submitting} className="rounded-lg bg-pri-col hover:bg-pri-hover text-white-shade text-sm font-medium px-4 py-2 disabled:bg-pri-col/50 cursor-pointer">
+                        {submitting ? "Saving..." : editingExpenseId ? "Update Expense" : "Add Expense"}
+                    </button>
+                    {editingExpenseId && (
+                        <button type="button" onClick={resetForm} className="rounded-lg border border-black/15 dark:border-white-shade/20 text-sm dark:text-white-shade px-4 py-2 cursor-pointer">
+                            Cancel Edit
+                        </button>
+                    )}
+                </div>
+            </form>
+
+            <form onSubmit={handleApplyFilter} className="rounded-xl border border-black/10 dark:border-white-shade/10 bg-light-surface dark:bg-dark-surface p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                <div className="flex flex-col gap-1">
+                    <label htmlFor="expense-filter-category" className="text-xs text-black/60 dark:text-white-shade/70">Filter Category</label>
+                    <select
+                        id="expense-filter-category"
+                        value={filterFormData.category}
+                        onChange={(e) => setFilterFormData((prev) => ({ ...prev, category: e.target.value }))}
+                        className={selectFieldClassName}
+                    >
+                        <option value="">All Categories</option>
+                        {expenseCategories.map((category) => (
+                            <option key={category} value={category}>{category}</option>
+                        ))}
+                    </select>
+                </div>
+                <div className="flex flex-col gap-1">
+                    <label htmlFor="expense-filter-start-date" className="text-xs text-black/60 dark:text-white-shade/70">Start Date</label>
+                    <input
+                        id="expense-filter-start-date"
+                        type="date"
+                        value={filterFormData.startDate}
+                        onChange={(e) => setFilterFormData((prev) => ({ ...prev, startDate: e.target.value }))}
+                        className={inputFieldClassName}
+                    />
+                </div>
+                <div className="flex flex-col gap-1">
+                    <label htmlFor="expense-filter-end-date" className="text-xs text-black/60 dark:text-white-shade/70">End Date</label>
+                    <input
+                        id="expense-filter-end-date"
+                        type="date"
+                        value={filterFormData.endDate}
+                        onChange={(e) => setFilterFormData((prev) => ({ ...prev, endDate: e.target.value }))}
+                        className={inputFieldClassName}
+                    />
+                </div>
+                <button type="submit" className="rounded-lg border border-black/15 dark:border-white-shade/20 text-sm dark:text-white-shade px-3 py-2 cursor-pointer">
+                    Apply Filter
+                </button>
+            </form>
+
+            <div className="rounded-xl border border-black/10 dark:border-white-shade/10 bg-light-surface dark:bg-dark-surface overflow-hidden">
+                {loading ? (
+                    <p className="text-sm text-black/70 dark:text-white-shade/70 p-4">Loading expense records...</p>
+                ) : expenses.length === 0 ? (
+                    <p className="text-sm text-black/70 dark:text-white-shade/70 p-4">No expense records available yet.</p>
+                ) : (
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-sm">
+                            <thead className="bg-black/5 dark:bg-white/5">
+                                <tr className="text-left">
+                                    <th className="px-3 py-3 font-medium text-black/70 dark:text-white-shade/70">Batch</th>
+                                    <th className="px-3 py-3 font-medium text-black/70 dark:text-white-shade/70">Category</th>
+                                    <th className="px-3 py-3 font-medium text-black/70 dark:text-white-shade/70">Description</th>
+                                    <th className="px-3 py-3 font-medium text-black/70 dark:text-white-shade/70">Amount</th>
+                                    <th className="px-3 py-3 font-medium text-black/70 dark:text-white-shade/70">Date</th>
+                                    <th className="px-3 py-3 font-medium text-black/70 dark:text-white-shade/70">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {expenses.map((expense) => (
+                                    <tr key={expense.expenseId} className="border-t border-black/10 dark:border-white-shade/10">
+                                        <td className="px-3 py-3 dark:text-white-shade">{expense.batchName}</td>
+                                        <td className="px-3 py-3 text-black/70 dark:text-white-shade/70">{expense.category}</td>
+                                        <td className="px-3 py-3 text-black/70 dark:text-white-shade/70">{expense.description}</td>
+                                        <td className="px-3 py-3 text-black/70 dark:text-white-shade/70">{formatCurrency(expense.amount)}</td>
+                                        <td className="px-3 py-3 text-black/70 dark:text-white-shade/70">{formatDate(expense.expenseDate)}</td>
+                                        <td className="px-3 py-3">
+                                            <button onClick={() => handleEditExpense(expense)} className="text-xs rounded-md border border-black/15 dark:border-white-shade/20 text-black/80 dark:text-white-shade px-2 py-1 cursor-pointer">
+                                                Edit
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+            </div>
+
+            <AlertMessage
+                type={alert.type}
+                title={alert.title}
+                message={alert.message}
+                onClose={() => setAlert({ type: "", title: "", message: "" })}
+            />
+        </section>
     );
 };
 

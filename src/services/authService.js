@@ -199,4 +199,33 @@ const verifyToken = async (formData) => {
     }
 }
 
-export {signUp, login, signOut, refreshAuthToken, getAuthenticatedUser, requestPasswordReset, resetPassword, verifyToken};
+const updateProfileName = async (fullname) => {
+    try {
+        const response = await fetchWithAuth(`${apiBaseUrl}/api/auth/update-profile`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ fullname }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            return {
+                success: false,
+                message: data.message || "Failed to update profile",
+            };
+        }
+
+        return data;
+    } catch (err) {
+        console.error("Error updating profile: ", err);
+        return {
+            success: false,
+            message: "Network error. Please try again.",
+        };
+    }
+};
+
+export {signUp, login, signOut, refreshAuthToken, getAuthenticatedUser, requestPasswordReset, resetPassword, verifyToken, updateProfileName};

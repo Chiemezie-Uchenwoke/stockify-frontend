@@ -7,9 +7,11 @@ const ThemeButton = ({iconSize}) => {
 
     return (
         <button
+            type="button"
             className="cursor-pointer select-none text-light-text-primary dark:text-white-shade"
             onClick={toggleTheme}
             style={{fontSize: `${iconSize}rem`}}
+            aria-label="Toggle theme"
         >
             {theme === "dark" ? <PiSunLight /> : <FiMoon />}
         </button>

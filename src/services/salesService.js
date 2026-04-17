@@ -63,4 +63,74 @@ const getSales = async (batchId) => {
     }
 }
 
-export {recordSale, getSales};
+const getAllSales = async () => {
+    try {
+        const response = await fetchWithAuth(`${apiBaseUrl}/api/sale/`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        const data = await response.json();
+
+        if (!response.ok) {
+            return {
+                success: false,
+                message: data.message || "Failed to fetch sales records",
+                sales: [],
+            };
+        }
+
+        return {
+            success: data.success ?? true,
+            message: data.message || "Sales record fetched successfully",
+            sales: data.sales || [],
+        };
+    } catch (err) {
+        console.error("Error fetching sales records: ", err);
+        return {
+            success: false,
+            message: "Network error. Please try again.",
+            sales: [],
+        };
+    }
+};
+
+const filterSales = async (formData) => {
+    try {
+        const params = new URLSearchParams();
+        if (formData.startDate) params.append("startDate", formData.startDate);
+        if (formData.endDate) params.append("endDate", formData.endDate);
+
+        const response = await fetchWithAuth(`${apiBaseUrl}/api/sale/filter?${params.toString()}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        const data = await response.json();
+
+        if (!response.ok) {
+            return {
+                success: false,
+                message: data.message || "Failed to filter sales records",
+                sales: [],
+            };
+        }
+
+        return {
+            success: data.success ?? true,
+            message: data.message || "Sales filtering was successful.",
+            sales: data.sales || [],
+        };
+    } catch (err) {
+        console.error("Error filtering sales records: ", err);
+        return {
+            success: false,
+            message: "Network error. Please try again.",
+            sales: [],
+        };
+    }
+};
+
+export { recordSale, getSales, getAllSales, filterSales };
