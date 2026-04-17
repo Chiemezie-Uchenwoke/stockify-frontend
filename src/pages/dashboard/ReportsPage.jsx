@@ -1,9 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import useThemeStore from "../../stores/ThemeStore";
 import { filterExpense } from "../../services/expenseService";
 import { getAllSales } from "../../services/salesService";
 import { getAllBatches } from "../../services/batchService";
 import AlertMessage from "../../components/AlertMessage/AlertMessage";
+
+const ReportsCharts = lazy(() => import("../../components/Dashboard/Reports/ReportsCharts"));
 
 const formatCurrency = (amount) => {
     const value = Number(amount || 0);
@@ -68,6 +70,15 @@ const ReportsPage = () => {
         };
     }, [sales, expenses]);
 
+    const chartStyles = useMemo(() => {
+        const isDark = theme === "dark";
+        return {
+            tickColor: isDark ? "rgba(255,255,255,0.75)" : "rgba(17,24,39,0.75)",
+            gridColor: isDark ? "rgba(255,255,255,0.12)" : "rgba(17,24,39,0.12)",
+            legendColor: isDark ? "rgba(255,255,255,0.85)" : "rgba(17,24,39,0.85)",
+        };
+    }, [theme]);
+
     return (
         <section className={`${theme === "dark" ? "dark" : ""} flex flex-col gap-6`}>
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
@@ -111,6 +122,21 @@ const ReportsPage = () => {
                     </ul>
                 </article>
             </div>
+
+            <Suspense
+                fallback={
+                    <article className="rounded-xl border border-black/10 dark:border-white-shade/10 bg-light-surface dark:bg-dark-surface p-4">
+                        <p className="text-sm text-black/70 dark:text-white-shade/70">Loading charts...</p>
+                    </article>
+                }
+            >
+                <ReportsCharts
+                    totals={totals}
+                    sales={sales}
+                    expenses={expenses}
+                    chartStyles={chartStyles}
+                />
+            </Suspense>
 
             {loading && (
                 <p className="text-sm text-black/70 dark:text-white-shade/70">Loading report data...</p>
