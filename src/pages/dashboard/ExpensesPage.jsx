@@ -20,12 +20,18 @@ const formatDate = (value) => {
     return new Date(value).toLocaleDateString();
 };
 
+const LIMIT = 10;
+
 const ExpensesPage = () => {
     const { theme } = useThemeStore();
     const [batches, setBatches] = useState([]);
     const [expenses, setExpenses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
+    const [page, setPage] = useState(1);
+    const [pagination, setPagination] = useState(null);
+    const [isFilterActive, setIsFilterActive] = useState(false);
+    const [activeFilter, setActiveFilter] = useState({});
     const [formData, setFormData] = useState({
         batchId: "",
         category: "Shipping",
@@ -52,45 +58,36 @@ const ExpensesPage = () => {
         return expenses.reduce((sum, expense) => sum + Number(expense.amount || 0), 0);
     }, [expenses]);
 
-    const fetchPageData = async () => {
+    const fetchExpenses = async (p = 1, filter = {}) => {
         setLoading(true);
-        const [batchesResponse, expensesResponse] = await Promise.all([
-            getAllBatches(),
-            filterExpense({}),
-        ]);
-
-        if (batchesResponse.success) {
-            setBatches(batchesResponse.batches || []);
-            setFormData((prev) => ({
-                ...prev,
-                batchId: prev.batchId || batchesResponse.batches?.[0]?._id || "",
-            }));
-        }
-
-        if (expensesResponse.success) {
-            setExpenses(expensesResponse.expenses || []);
+        const res = await filterExpense(filter, p, LIMIT);
+        if (res.success) {
+            setExpenses(res.expenses || []);
+            setPagination(res.pagination || null);
         } else {
-            setAlert({
-                type: "error",
-                title: "Expenses",
-                message: expensesResponse.message,
-            });
+            setAlert({ type: "error", title: "Expenses", message: res.message });
         }
         setLoading(false);
     };
 
     useEffect(() => {
-        fetchPageData();
+        const init = async () => {
+            const batchesResponse = await getAllBatches();
+            if (batchesResponse.success) {
+                setBatches(batchesResponse.batches || []);
+                setFormData((prev) => ({
+                    ...prev,
+                    batchId: prev.batchId || batchesResponse.batches?.[0]?._id || "",
+                }));
+            }
+            await fetchExpenses(1, {});
+        };
+        init();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const resetForm = () => {
-        setFormData({
-            batchId: batches[0]?._id || "",
-            category: "Shipping",
-            description: "",
-            amount: "",
-            expenseDate: "",
-        });
+        setFormData({ batchId: batches[0]?._id || "", category: "Shipping", description: "", amount: "", expenseDate: "" });
     };
 
     const handleSubmit = async (e) => {
@@ -117,31 +114,21 @@ const ExpensesPage = () => {
             return;
         }
 
-        setAlert({
-            type: "success",
-            title: "New Expense",
-            message: response.message,
-        });
-
+        setAlert({ type: "success", title: "New Expense", message: response.message });
         resetForm();
-        await fetchPageData();
+        setIsFilterActive(false);
+        setActiveFilter({});
+        setPage(1);
+        await fetchExpenses(1, {});
         setSubmitting(false);
     };
 
     const handleApplyFilter = async (e) => {
         e.preventDefault();
-        const response = await filterExpense(filterFormData);
-
-        if (!response.success) {
-            setAlert({
-                type: "error",
-                title: "Filter Expenses",
-                message: response.message,
-            });
-            return;
-        }
-
-        setExpenses(response.expenses || []);
+        setPage(1);
+        setIsFilterActive(true);
+        setActiveFilter(filterFormData);
+        await fetchExpenses(1, filterFormData);
     };
 
     const handleEditExpense = (expense) => {
@@ -192,16 +179,18 @@ const ExpensesPage = () => {
             return;
         }
 
-        setAlert({
-            type: "success",
-            title: "Edit Expense",
-            message: response.message,
-        });
-
+        setAlert({ type: "success", title: "Edit Expense", message: response.message });
         closeEditModal();
-        await fetchPageData();
+        await fetchExpenses(page, isFilterActive ? activeFilter : {});
         setSubmitting(false);
     };
+
+    const goToPage = (p) => {
+        setPage(p);
+        fetchExpenses(p, isFilterActive ? activeFilter : {});
+    };
+
+    const totalPages = pagination?.totalPages ?? 1;
 
     const selectFieldClassName = "border border-black/15 dark:border-white-shade/20 rounded-lg px-3 py-2 text-sm dark:text-white-shade outline-none bg-light-surface dark:bg-dark-bg [&>option]:text-black [&>option]:bg-white dark:[&>option]:text-white-shade dark:[&>option]:bg-dark-bg";
     const inputFieldClassName = "border border-black/15 dark:border-white-shade/20 rounded-lg px-3 py-2 text-sm dark:text-white-shade outline-none";
@@ -362,6 +351,31 @@ const ExpensesPage = () => {
                     </div>
                 )}
             </div>
+
+            {totalPages > 1 && (
+                <div className="flex items-center justify-between text-sm">
+                    <p className="text-black/50 dark:text-white-shade/50">
+                        Page {page} of {totalPages}
+                        {pagination && <span> &middot; {pagination.total} records total</span>}
+                    </p>
+                    <div className="flex gap-2">
+                        <button
+                            disabled={page <= 1}
+                            onClick={() => goToPage(page - 1)}
+                            className="px-3 py-1.5 rounded-lg border border-black/15 dark:border-white-shade/20 dark:text-white-shade disabled:opacity-40 cursor-pointer"
+                        >
+                            Prev
+                        </button>
+                        <button
+                            disabled={page >= totalPages}
+                            onClick={() => goToPage(page + 1)}
+                            className="px-3 py-1.5 rounded-lg border border-black/15 dark:border-white-shade/20 dark:text-white-shade disabled:opacity-40 cursor-pointer"
+                        >
+                            Next
+                        </button>
+                    </div>
+                </div>
+            )}
 
             {isEditModalOpen && (
                 <div className="fixed inset-0 z-40 bg-black/50 flex items-center justify-center px-4">

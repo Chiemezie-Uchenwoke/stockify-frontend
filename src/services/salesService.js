@@ -63,13 +63,16 @@ const getSales = async (batchId) => {
     }
 }
 
-const getAllSales = async () => {
+const getAllSales = async (page, limit) => {
     try {
-        const response = await fetchWithAuth(`${apiBaseUrl}/api/sale/`, {
+        const params = new URLSearchParams();
+        if (page !== undefined) params.append("page", page);
+        if (limit !== undefined) params.append("limit", limit);
+        const qs = params.toString();
+
+        const response = await fetchWithAuth(`${apiBaseUrl}/api/sale/${qs ? "?" + qs : ""}`, {
             method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
         });
         const data = await response.json();
 
@@ -85,6 +88,7 @@ const getAllSales = async () => {
             success: data.success ?? true,
             message: data.message || "Sales record fetched successfully",
             sales: data.sales || [],
+            pagination: data.pagination,
         };
     } catch (err) {
         console.error("Error fetching sales records: ", err);

@@ -2,9 +2,14 @@ import fetchWithAuth from "../utils/fetchWithAuth";
 
 const apiBaseUrl = import.meta.env.VITE_STOCKIFY_BACKEND_URL;
 
-const getAllBatches = async () => {
+const getAllBatches = async (page, limit) => {
     try {
-        const response = await fetchWithAuth(`${apiBaseUrl}/api/batch/`, {
+        const params = new URLSearchParams();
+        if (page !== undefined) params.append("page", page);
+        if (limit !== undefined) params.append("limit", limit);
+        const qs = params.toString();
+
+        const response = await fetchWithAuth(`${apiBaseUrl}/api/batch/${qs ? "?" + qs : ""}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -17,13 +22,18 @@ const getAllBatches = async () => {
             return {
                 success: false,
                 message: data.message || "Unable to fetch batches",
+                batches: [],
             };
         }
 
         return data;
     } catch (err) {
         console.error("Error getting batches: ", err);
-        throw err;
+        return {
+            success: false,
+            message: "Network error. Please try again.",
+            batches: [],
+        };
     }
 }
 

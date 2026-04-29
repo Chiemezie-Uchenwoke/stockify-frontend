@@ -98,12 +98,14 @@ const editExpense = async (expenseId, formData) => {
     }
 };
 
-const filterExpense = async (formData) => {
+const filterExpense = async (formData, page, limit) => {
     try {
         const params = new URLSearchParams();
         if (formData.category) params.append("category", formData.category);
         if (formData.startDate) params.append("startDate", formData.startDate);
         if (formData.endDate) params.append("endDate", formData.endDate);
+        if (page !== undefined) params.append("page", page);
+        if (limit !== undefined) params.append("limit", limit);
 
         const response = await fetchWithAuth(`${apiBaseUrl}/api/expense/filter?${params.toString()}`, {
             method: "GET",
@@ -125,6 +127,7 @@ const filterExpense = async (formData) => {
             success: data.success ?? true,
             message: data.message || "Expense filtering was successful",
             expenses: data.expenses || [],
+            pagination: data.pagination,
         };
     } catch (err) {
         console.error("Error filtering expenses: ", err);

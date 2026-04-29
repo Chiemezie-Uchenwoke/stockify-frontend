@@ -142,4 +142,41 @@ const filterProducts = async (formData) => {
     }
 };
 
-export {getProductsByBatch, addNewProduct, editProduct, filterProducts};
+const getAllProducts = async (page, limit) => {
+    try {
+        const params = new URLSearchParams();
+        if (page !== undefined) params.append("page", page);
+        if (limit !== undefined) params.append("limit", limit);
+        const qs = params.toString();
+
+        const response = await fetchWithAuth(`${apiBaseUrl}/api/products/${qs ? "?" + qs : ""}`, {
+            method: "GET",
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            return {
+                success: false,
+                message: data.message || "Failed to fetch products",
+                products: [],
+            };
+        }
+
+        return {
+            success: data.success ?? true,
+            message: data.message,
+            products: data.products || [],
+            pagination: data.pagination,
+        };
+    } catch (err) {
+        console.error("Error fetching all products: ", err);
+        return {
+            success: false,
+            message: "Network error. Please try again.",
+            products: [],
+        };
+    }
+};
+
+export {getProductsByBatch, addNewProduct, editProduct, filterProducts, getAllProducts};
